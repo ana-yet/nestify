@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nestify - Tenant Dashboard</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-low": "#f2f4f6",
+                      "dark-bg": "#0F172A",
+                      "secondary-container": "#6cf8bb",
+                      "tertiary-container": "#885500",
+                      "on-primary-container": "#dad7ff",
+                      "text-muted": "#64748B",
+                      "background": "#f7f9fb",
+                      "outline": "#777587",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "surface-dim": "#d8dadc",
+                      "on-secondary-fixed-variant": "#005236",
+                      "tertiary-fixed": "#ffddb8",
+                      "on-tertiary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "surface-container": "#eceef0",
+                      "on-surface": "#191c1e",
+                      "primary": "#3525cd",
+                      "on-error-container": "#93000a",
+                      "tertiary": "#684000",
+                      "on-secondary-fixed": "#002113",
+                      "surface": "#FFFFFF",
+                      "secondary": "#006c49",
+                      "secondary-fixed": "#6ffbbe",
+                      "on-tertiary-container": "#ffd4a4",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-fixed": "#2a1700",
+                      "surface-container-highest": "#e0e3e5",
+                      "primary-container": "#4f46e5",
+                      "on-error": "#ffffff",
+                      "dark-surface": "#1E293B",
+                      "surface-variant": "#e0e3e5",
+                      "border-subtle": "#E2E8F0",
+                      "tertiary-fixed-dim": "#ffb95f",
+                      "on-secondary-container": "#00714d",
+                      "surface-bright": "#f7f9fb",
+                      "surface-container-high": "#e6e8ea",
+                      "inverse-on-surface": "#eff1f3",
+                      "surface-tint": "#4d44e3",
+                      "on-primary-fixed": "#0f0069",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-fixed-variant": "#653e00",
+                      "inverse-surface": "#2d3133",
+                      "secondary-fixed-dim": "#4edea3",
+                      "text-main": "#0F172A",
+                      "inverse-primary": "#c3c0ff",
+                      "outline-variant": "#c7c4d8",
+                      "error-container": "#ffdad6",
+                      "on-surface-variant": "#464555",
+                      "primary-fixed": "#e2dfff",
+                      "on-primary": "#ffffff",
+                      "on-background": "#191c1e",
+                      "on-primary-fixed-variant": "#3323cc"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "16px",
+                      "margin-desktop": "48px",
+                      "container-max": "1280px",
+                      "base": "8px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "label-md": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                      "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                      "label-sm": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                      "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                      "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                      "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                      "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                      "label-md": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600" }]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .ambient-shadow {
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen font-sans flex flex-col md:flex-row">
+<!-- Mobile Top Navigation (Hidden on Desktop) -->
+<nav class="md:hidden bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky shadow-sm border-b border-white/10 z-50">
+<div class="flex justify-between items-center w-full px-margin-mobile h-20">
+<div class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold tracking-tight">Nestify</div>
+<div class="flex items-center gap-4 text-primary">
+<span class="material-symbols-outlined scale-95 active:scale-90 transition-transform cursor-pointer">notifications</span>
+<span class="material-symbols-outlined scale-95 active:scale-90 transition-transform cursor-pointer">account_circle</span>
+</div>
+</div>
+</nav>
+<!-- Side Navigation (Desktop) -->
+<aside class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-surface border-r border-border-subtle shadow-lg py-6 px-4 z-40">
+<!-- Header -->
+<div class="flex items-center gap-3 mb-8 px-2">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined">real_estate_agent</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md text-primary font-black">Nestify Admin</h1>
+<p class="font-label-sm text-label-sm text-text-muted">Premium Management</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary-container/10 text-primary font-bold border-r-4 border-primary hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-label-md text-label-md">Bookings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="#">
+<span class="material-symbols-outlined">domain</span>
+<span class="font-label-md text-label-md">Properties</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="#">
+<span class="material-symbols-outlined">chat</span>
+<span class="font-label-md text-label-md">Messages</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<!-- CTA & Footer Nav -->
+<div class="mt-auto flex flex-col gap-4">
+<button class="w-full bg-primary text-on-primary py-2.5 rounded-lg font-label-md text-label-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                Add New Listing
+            </button>
+<div class="h-px w-full bg-border-subtle my-2"></div>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 flex flex-col min-h-screen">
+<div class="flex-1 p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto w-full flex flex-col gap-gutter">
+<!-- Welcome Header -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-2">
+<div>
+<h2 class="font-headline-lg text-headline-lg md:font-display-lg md:text-display-lg text-text-main">Welcome back, Alex.</h2>
+<p class="font-body-lg text-body-lg text-text-muted mt-2">Here's what's happening with your properties today.</p>
+</div>
+<div class="flex items-center gap-3 bg-surface border border-border-subtle rounded-xl px-4 py-2 ambient-shadow">
+<span class="material-symbols-outlined text-text-muted">today</span>
+<span class="font-label-md text-label-md text-on-surface">Oct 24, 2024</span>
+</div>
+</header>
+<!-- Summary Cards (Bento Grid) -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="bg-surface rounded-xl border border-border-subtle p-6 ambient-shadow flex flex-col justify-between h-40">
+<div class="flex justify-between items-start">
+<p class="font-label-md text-label-md text-text-muted">Active Bookings</p>
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[18px]">key</span>
+</div>
+</div>
+<div>
+<h3 class="font-headline-lg text-headline-lg text-text-main">12</h3>
+<p class="font-label-sm text-label-sm text-secondary mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +2 this week
+                        </p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface rounded-xl border border-border-subtle p-6 ambient-shadow flex flex-col justify-between h-40">
+<div class="flex justify-between items-start">
+<p class="font-label-md text-label-md text-text-muted">Total Spent (YTD)</p>
+<div class="w-8 h-8 rounded-full bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-[18px]">payments</span>
+</div>
+</div>
+<div>
+<h3 class="font-headline-lg text-headline-lg text-text-main">$24,500</h3>
+<p class="font-label-sm text-label-sm text-text-muted mt-1">Across 3 properties</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface rounded-xl border border-border-subtle p-6 ambient-shadow flex flex-col justify-between h-40">
+<div class="flex justify-between items-start">
+<p class="font-label-md text-label-md text-text-muted">Saved Favorites</p>
+<div class="w-8 h-8 rounded-full bg-tertiary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-[18px]">favorite</span>
+</div>
+</div>
+<div>
+<h3 class="font-headline-lg text-headline-lg text-text-main">8</h3>
+<p class="font-label-sm text-label-sm text-primary mt-1 cursor-pointer hover:underline">View all favorites →</p>
+</div>
+</div>
+</section>
+<!-- Main Content Grid (Bookings Table & Activity) -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
+<!-- My Bookings Table -->
+<div class="lg:col-span-2 bg-surface rounded-xl border border-border-subtle ambient-shadow overflow-hidden">
+<div class="p-6 border-b border-border-subtle flex justify-between items-center bg-surface/50">
+<h3 class="font-headline-md text-headline-md text-text-main">Recent Bookings</h3>
+<button class="font-label-sm text-label-sm text-primary hover:underline">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="py-3 px-6 font-label-sm text-label-sm text-text-muted font-medium border-b border-border-subtle">Property</th>
+<th class="py-3 px-6 font-label-sm text-label-sm text-text-muted font-medium border-b border-border-subtle">Dates</th>
+<th class="py-3 px-6 font-label-sm text-label-sm text-text-muted font-medium border-b border-border-subtle">Status</th>
+<th class="py-3 px-6 font-label-sm text-label-sm text-text-muted font-medium border-b border-border-subtle">Payment</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface">
+<tr class="hover:bg-surface-container-low/30 transition-colors group cursor-pointer border-b border-border-subtle last:border-0">
+<td class="py-4 px-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container bg-cover bg-center" data-alt="A modern luxury apartment interior featuring expansive floor-to-ceiling windows overlooking a vibrant city skyline during golden hour. The space is decorated with minimalist, high-end designer furniture in neutral tones, illuminated by soft, natural sunlight creating a warm, premium aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBokaUfv3Vs3H5E7EMsdDUohAD-tUhTj0CzG4hEYpSxQpkVA7Rlc7Bt8f8deD9xBXMLNIe2VOCYul2ClH2ZpXH6g9U64W8clE5OvrRIYJsC7207G-Hsabnok7yRkIcMmC3JRNXqTd4cYjG4e5RFgnjgpoezUKYbyUX8FzDWXJwnknEnixm244Kro4_6wU-rrTl0CmbH4TjQifZ65AuTPJI5-_QelLDNXuyRGAbRL2gsb4kR-eBCD4Qr3oSAiezJViEYjyAhY8ND7yyO')"></div>
+<div>
+<p class="font-label-md text-label-md group-hover:text-primary transition-colors">The Glasshouse Lofts</p>
+<p class="font-label-sm text-label-sm text-text-muted">Seattle, WA</p>
+</div>
+</td>
+<td class="py-4 px-6 text-text-muted">Nov 12 - Nov 18</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/20 text-secondary font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Confirmed
+                                        </span>
+</td>
+<td class="py-4 px-6 font-label-md text-label-md">$1,250</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group cursor-pointer border-b border-border-subtle last:border-0">
+<td class="py-4 px-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container bg-cover bg-center" data-alt="A serene coastal villa exterior with whitewashed walls and a terracotta roof, situated near a calm blue ocean. The architecture features modern Mediterranean influences, surrounded by lush green palm trees under a clear, bright blue sky, conveying a sense of relaxed luxury and quiet escape." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCqKgBhjQ359jxEYG0PmhqPMYLiU2bjpblhh-Fbpl0Z2A978mVob_Gsr2V0qlgWUN-4jl13Zq329aG5BBuowlWL7cONA5-9JBczesIG2nizRgIHH14J2E2Auf7Q3FblYkejpCstQ_j3TEsYj7HY6z3PeS1mbs6J1ob1Z4Jf9ctFh6LbFMRGhb-vlegL_h3USeFF2ZZu_6wPhZQhpd_9hY6AF0dLPhD1f79rh0BJIvcZ0kTjzzyn-NXZvVAHwGl0EB8YtwiqpswGakjo')"></div>
+<div>
+<p class="font-label-md text-label-md group-hover:text-primary transition-colors">Oceanview Villa</p>
+<p class="font-label-sm text-label-sm text-text-muted">Malibu, CA</p>
+</div>
+</td>
+<td class="py-4 px-6 text-text-muted">Dec 01 - Dec 10</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-highest text-text-muted font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span> Pending
+                                        </span>
+</td>
+<td class="py-4 px-6 font-label-md text-label-md">$3,400</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group cursor-pointer border-b border-border-subtle last:border-0">
+<td class="py-4 px-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container bg-cover bg-center" data-alt="A cozy, high-end mountain cabin interior with exposed wooden beams and a large stone fireplace. Soft, ambient lighting from modern fixtures highlights the rich textures of leather armchairs and faux fur throws, creating a warm, inviting, and sophisticated winter retreat atmosphere." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCah59VMMrM6kWs2Cp_rE7iK_PG8pxIN_e119XWjXCO11vubZu3VsGSz36GrZ-f-6p0a_xKIzRb70HXAKxssr8mdhpgT4H6A3WNuTS2OAlHut5E_EUm9MV03jJ_6yOzgCnDAD4JWYz9CPjLn6ddxlaWrscGMbAKEjRDrOzRmt0FTdM2wZTqWbZRdnHf4prIflKuaTUH03uvDEgX65vU9WgmGIbnbakYM88WTcb8GcFvxs53zhlIzcUAlNziIEdr3X5PQMfDYzd6ajKi')"></div>
+<div>
+<p class="font-label-md text-label-md group-hover:text-primary transition-colors">Alpine Retreat</p>
+<p class="font-label-sm text-label-sm text-text-muted">Aspen, CO</p>
+</div>
+</td>
+<td class="py-4 px-6 text-text-muted">Jan 15 - Jan 20</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/20 text-secondary font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Confirmed
+                                        </span>
+</td>
+<td class="py-4 px-6 font-label-md text-label-md">$2,800</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Activity Feed -->
+<div class="bg-surface rounded-xl border border-border-subtle ambient-shadow flex flex-col">
+<div class="p-6 border-b border-border-subtle bg-surface/50">
+<h3 class="font-headline-md text-headline-md text-text-main">Recent Activity</h3>
+</div>
+<div class="p-6 flex-1">
+<div class="relative border-l border-border-subtle ml-3 space-y-6">
+<!-- Activity Item 1 -->
+<div class="relative pl-6">
+<div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-surface border-2 border-primary flex items-center justify-center">
+<div class="w-1.5 h-1.5 bg-primary rounded-full"></div>
+</div>
+<p class="font-label-sm text-label-sm text-text-muted mb-1">Today, 10:45 AM</p>
+<p class="font-body-md text-body-md text-on-surface">Payment for <span class="font-label-md text-label-md">The Glasshouse Lofts</span> was successfully processed.</p>
+</div>
+<!-- Activity Item 2 -->
+<div class="relative pl-6">
+<div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-surface border-2 border-outline-variant"></div>
+<p class="font-label-sm text-label-sm text-text-muted mb-1">Yesterday</p>
+<p class="font-body-md text-body-md text-on-surface">Host Sarah sent you a message regarding check-in details.</p>
+<button class="mt-2 text-primary font-label-sm text-label-sm hover:underline">Read Message</button>
+</div>
+<!-- Activity Item 3 -->
+<div class="relative pl-6">
+<div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-surface border-2 border-outline-variant"></div>
+<p class="font-label-sm text-label-sm text-text-muted mb-1">Oct 20, 2024</p>
+<p class="font-body-md text-body-md text-on-surface">You saved <span class="font-label-md text-label-md">Desert Oasis</span> to your favorites.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-dark-bg w-full mt-auto border-t border-border-subtle dark:border-white/5">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop py-12 max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-4 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold">Nestify</div>
+<div class="flex flex-wrap justify-center gap-6 font-body-md text-body-md text-text-muted dark:text-surface-variant">
+<a class="hover:text-primary dark:hover:text-primary-fixed-dim transition-colors opacity-80 hover:opacity-100" href="#">About Us</a>
+<a class="hover:text-primary dark:hover:text-primary-fixed-dim transition-colors opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+<a class="hover:text-primary dark:hover:text-primary-fixed-dim transition-colors opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+<a class="hover:text-primary dark:hover:text-primary-fixed-dim transition-colors opacity-80 hover:opacity-100" href="#">Contact Support</a>
+</div>
+</div>
+<div class="col-span-1 md:col-span-4 text-center mt-6">
+<p class="font-label-sm text-label-sm text-text-muted dark:text-surface-variant">© 2024 Nestify. Elevated Living Experiences.</p>
+</div>
+</div>
+</footer>
+</main>
+</body></html>

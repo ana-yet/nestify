@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nestify - Owner Dashboard</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Config -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#f2f4f6",
+                        "dark-bg": "#0F172A",
+                        "secondary-container": "#6cf8bb",
+                        "tertiary-container": "#885500",
+                        "on-primary-container": "#dad7ff",
+                        "text-muted": "#64748B",
+                        "background": "#f7f9fb",
+                        "outline": "#777587",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary-fixed-variant": "#005236",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container": "#eceef0",
+                        "on-surface": "#191c1e",
+                        "primary": "#3525cd",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#684000",
+                        "on-secondary-fixed": "#002113",
+                        "surface": "#FFFFFF",
+                        "secondary": "#006c49",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-tertiary-container": "#ffd4a4",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface-container-highest": "#e0e3e5",
+                        "primary-container": "#4f46e5",
+                        "on-error": "#ffffff",
+                        "dark-surface": "#1E293B",
+                        "surface-variant": "#e0e3e5",
+                        "border-subtle": "#E2E8F0",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "on-secondary-container": "#00714d",
+                        "surface-bright": "#f7f9fb",
+                        "surface-container-high": "#e6e8ea",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-tint": "#4d44e3",
+                        "on-primary-fixed": "#0f0069",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "inverse-surface": "#2d3133",
+                        "secondary-fixed-dim": "#4edea3",
+                        "text-main": "#0F172A",
+                        "inverse-primary": "#c3c0ff",
+                        "outline-variant": "#c7c4d8",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#464555",
+                        "primary-fixed": "#e2dfff",
+                        "on-primary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "on-primary-fixed-variant": "#3323cc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "margin-desktop": "48px",
+                        "container-max": "1280px",
+                        "base": "8px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom Utilities for smooth transitions and specific glass effects */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        
+        /* Toggle Switch CSS */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #3525cd;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #3525cd;
+        }
+        .toggle-checkbox:checked + .toggle-label:after {
+            transform: translateX(100%);
+            border-color: white;
+        }
+        .toggle-label {
+            width: 40px;
+            height: 24px;
+            background-color: #E2E8F0;
+            border-radius: 9999px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .toggle-label:after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.2s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-surface-container-low text-text-main font-sans antialiased overflow-hidden">
+<!-- Fluid Layout Container -->
+<div class="flex h-screen w-full">
+<!-- SideNavBar (Shared Component) -->
+<aside class="bg-surface dark:bg-dark-surface h-screen w-64 fixed left-0 top-0 border-r border-border-subtle dark:border-white/10 shadow-lg flex flex-col h-full py-6 px-4 z-20">
+<!-- Header -->
+<div class="flex items-center gap-3 px-4 mb-8">
+<div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">real_estate_agent</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-black leading-tight">Nestify Admin</h1>
+<p class="font-label-sm text-label-sm text-text-muted mt-0.5">Premium Management</p>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<nav class="flex-1 space-y-1">
+<!-- Tab: Dashboard (ACTIVE) -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container/10 dark:bg-primary-container/20 text-primary dark:text-primary-fixed-dim font-bold border-r-4 border-primary translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<!-- Tab: Bookings (INACTIVE) -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low hover:bg-surface-container-high dark:hover:bg-surface-variant/10 transition-all translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-xl">calendar_month</span>
+<span class="font-label-md text-label-md">Bookings</span>
+</a>
+<!-- Tab: Properties (INACTIVE) -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low hover:bg-surface-container-high dark:hover:bg-surface-variant/10 transition-all translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-xl">domain</span>
+<span class="font-label-md text-label-md">Properties</span>
+</a>
+<!-- Tab: Messages (INACTIVE) -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low hover:bg-surface-container-high dark:hover:bg-surface-variant/10 transition-all translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-xl">chat</span>
+<span class="font-label-md text-label-md">Messages</span>
+</a>
+<!-- Tab: Settings (INACTIVE) -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low hover:bg-surface-container-high dark:hover:bg-surface-variant/10 transition-all translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<!-- CTA Button -->
+<div class="mt-8 mb-6">
+<button class="w-full bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-sm">add</span>
+                    Add New Listing
+                </button>
+</div>
+<!-- Footer Tabs -->
+<div class="mt-auto border-t border-border-subtle pt-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="#">
+<span class="material-symbols-outlined text-xl">help</span>
+<span class="font-label-sm text-label-sm">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="#">
+<span class="material-symbols-outlined text-xl">logout</span>
+<span class="font-label-sm text-label-sm">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 flex-1 h-screen overflow-y-auto bg-surface-container-low">
+<!-- Sticky Top Header (Glassmorphic) -->
+<header class="sticky top-0 z-10 glass-panel border-b border-white/10 px-margin-desktop py-6 flex justify-between items-center shadow-sm">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-text-main">Overview</h2>
+<p class="font-body-md text-body-md text-text-muted mt-1">Welcome back. Here's what's happening with your properties.</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full bg-surface border border-border-subtle flex items-center justify-center text-text-muted hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-high border border-border-subtle overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a modern real estate agent or property manager. The subject is well-lit with soft, natural studio lighting, exuding confidence and approachability. The background is a minimalist, bright corporate environment with subtle architectural details in light mode aesthetic. The color palette features neutral tones, sharp whites, and a hint of deep indigo to align with premium branding." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHi-m_As0230vM9JzBIDr3TjdN91HO1wstzkGHxb-AvBwFP22cwMw-uUARODFHTQdP3bSSfYlyEzrf2bZTJ9orgZF6nvcYTMYvx_121cLvhZkk8zXY1eZ08B_-Mid42M3WmIWR6mo8IrIHbv6Xlxvqv2LmBVeqrwu8mmUAyK_dw8DyWr-vQLDVopEg6QalhPYH4JOLQWh7FUw1DjMm0Tcyb4P99pIfeWXxZ9i7O2qazzYR0uVrpTrv3LAYFLPFsEVx6w4oAobGsDPF"/>
+</div>
+</div>
+</header>
+<!-- Dashboard Content Container -->
+<div class="p-margin-desktop max-w-container-max mx-auto space-y-gutter">
+<!-- KPI Cards Grid (Level 1 Elevation) -->
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+<!-- KPI 1 -->
+<div class="bg-surface rounded-xl p-6 shadow-[0px_4px_20px_rgba(0,0,0,0.02)] border border-border-subtle hover:shadow-[0px_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-label-md text-label-md text-text-muted">Total Earnings (YTD)</h3>
+<div class="w-8 h-8 rounded-full bg-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-sm">account_balance_wallet</span>
+</div>
+</div>
+<div class="font-display-lg text-display-lg text-text-main mb-2">$124,500</div>
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span class="font-label-sm text-label-sm">+12.5% vs last year</span>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface rounded-xl p-6 shadow-[0px_4px_20px_rgba(0,0,0,0.02)] border border-border-subtle hover:shadow-[0px_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-label-md text-label-md text-text-muted">Avg. Occupancy Rate</h3>
+<div class="w-8 h-8 rounded-full bg-secondary-container/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-sm">pie_chart</span>
+</div>
+</div>
+<div class="font-display-lg text-display-lg text-text-main mb-2">86%</div>
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span class="font-label-sm text-label-sm">+4.2% vs last month</span>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface rounded-xl p-6 shadow-[0px_4px_20px_rgba(0,0,0,0.02)] border border-border-subtle hover:shadow-[0px_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-label-md text-label-md text-text-muted">Active Bookings</h3>
+<div class="w-8 h-8 rounded-full bg-tertiary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-sm">calendar_today</span>
+</div>
+</div>
+<div class="font-display-lg text-display-lg text-text-main mb-2">42</div>
+<div class="flex items-center gap-1 text-text-muted">
+<span class="material-symbols-outlined text-sm text-outline">horizontal_rule</span>
+<span class="font-label-sm text-label-sm">Steady this week</span>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface rounded-xl p-6 shadow-[0px_4px_20px_rgba(0,0,0,0.02)] border border-border-subtle hover:shadow-[0px_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-label-md text-label-md text-text-muted">Listed Properties</h3>
+<div class="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-sm">home_work</span>
+</div>
+</div>
+<div class="font-display-lg text-display-lg text-text-main mb-2">8</div>
+<div class="flex items-center gap-1 text-text-muted">
+<span class="font-label-sm text-label-sm">Across 3 cities</span>
+</div>
+</div>
+</section>
+<!-- Analytics Bento Grid -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Monthly Earnings Chart (Col Span 2) -->
+<div class="lg:col-span-2 bg-surface rounded-xl p-6 shadow-[0px_4px_20px_rgba(0,0,0,0.02)] border border-border-subtle flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-text-main">Monthly Earnings Revenue</h3>
+<select class="bg-surface-container-low border-none rounded-md font-label-sm text-label-sm text-text-muted py-1.5 pl-3 pr-8 focus:ring-1 focus:ring-primary">
+<option>This Year</option>
+<option>Last Year</option>
+</select>
+</div>
+<!-- Abstract Line Chart Visualization -->
+<div class="flex-1 relative w-full min-h-[250px] bg-gradient-to-t from-surface-container-low/50 to-transparent rounded-lg border border-border-subtle flex items-end px-4 pb-4 pt-10 gap-2">
+<!-- Y-axis labels -->
+<div class="absolute left-0 top-0 h-full flex flex-col justify-between py-4 px-2 font-label-sm text-label-sm text-text-muted opacity-50 text-xs">
+<span>$20k</span>
+<span>$15k</span>
+<span>$10k</span>
+<span>$5k</span>
+<span>$0</span>
+</div>
+<!-- Bars (abstract representation) -->
+<div class="w-full h-full ml-8 flex items-end justify-between gap-2 lg:gap-4 relative">
+<!-- Horizontal grid lines -->
+<div class="absolute inset-0 flex flex-col justify-between z-0 pointer-events-none opacity-20">
+<div class="w-full border-t border-text-muted"></div>
+<div class="w-full border-t border-text-muted"></div>
+<div class="w-full border-t border-text-muted"></div>
+<div class="w-full border-t border-text-muted"></div>
+<div class="w-full border-t border-text-muted"></div>
+</div>
+<div class="flex-1 bg-primary/20 hover:bg-primary/40 rounded-t-sm h-[40%] relative z-10 transition-colors group"><div class="hidden group-hover:block absolute -top-8 left-1/2 -translate-x-1/2 bg-dark-bg text-on-primary text-xs px-2 py-1 rounded font-label-sm">$8k</div></div>
+<div class="flex-1 bg-primary/30 hover:bg-primary/50 rounded-t-sm h-[55%] relative z-10 transition-colors group"><div class="hidden group-hover:block absolute -top-8 left-1/2 -translate-x-1/2 bg-dark-bg text-on-primary text-xs px-2 py-1 rounded font-label-sm">$11k</div></div>
+<div class="flex-1 bg-primary/40 hover:bg-primary/60 rounded-t-sm h-[70%] relative z-10 transition-colors group"><div class="hidden group-hover:block absolute -top-8 left-1/2 -translate-x-1/2 bg-dark-bg text-on-primary text-xs px-2 py-1 rounded font-label-sm">$14k</div></div>
+<div class="flex-1 bg-primary/20 hover:bg-primary/40 rounded-t-sm h-[50%] relative z-10 transition-colors group"><div class="hidden group-hover:block absolute -top-8 left-1/2 -translate-x-1/2 bg-dark-bg text-on-primary text-xs px-2 py-1 rounded font-label-sm">$10k</div></div>
+<div class="flex-1 bg-primary rounded-t-sm h-[90%] relative z-10 shadow-[0_0_15px_rgba(53,37,205,0.3)] group"><div class="hidden group-hover:block absolute -top-8 left-1/2 -translate-x-1/2 bg-dark-bg text-on-primary text-xs px-2 py-1 rounded font-label-sm">$18k</div></div>
+<div class="flex-1 bg-primary/50 hover:bg-primary/70 rounded-t-sm h-[80%] relative z-10 transition-colors group"><div class="hidden group-hover:block absolute -top-8 left-1/2 -translate-x-1/2 bg-dark-bg text-on-primary text-xs px-2 py-1 rounded font-label-sm">$16k</div></div>
+<div class="flex-1 bg-primary/30 hover:bg-primary/50 rounded-t-sm h-[60%] relative z-10 transition-colors group"><div class="hidden group-hover:block absolute -top-8 left-1/2 -translate-x-1/2 bg-dark-bg text-on-primary text-xs px-2 py-1 rounded font-label-sm">$12k</div></div>
+</div>
+<!-- X-axis labels -->
+<div class="absolute bottom-0 left-0 w-full ml-8 flex justify-between px-2 -mb-6 font-label-sm text-label-sm text-text-muted text-xs">
+<span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span>
+</div>
+</div>
+</div>
+<!-- Booking Trends (Col Span 1) -->
+<div class="bg-surface rounded-xl p-6 shadow-[0px_4px_20px_rgba(0,0,0,0.02)] border border-border-subtle flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-text-main">Platform Split</h3>
+<button class="text-text-muted hover:text-primary"><span class="material-symbols-outlined text-sm">more_vert</span></button>
+</div>
+<div class="flex-1 flex flex-col items-center justify-center relative">
+<!-- Abstract Doughnut Visualization using CSS -->
+<div class="w-40 h-40 rounded-full border-[16px] border-surface-container-low relative flex items-center justify-center shadow-inner">
+<!-- Simulated segments -->
+<div class="absolute inset-[-16px] rounded-full border-[16px] border-primary" style="clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 80% 100%);"></div>
+<div class="absolute inset-[-16px] rounded-full border-[16px] border-secondary" style="clip-path: polygon(50% 50%, 80% 100%, 0 100%, 0 50%);"></div>
+<div class="absolute inset-[-16px] rounded-full border-[16px] border-tertiary-fixed-dim" style="clip-path: polygon(50% 50%, 0 50%, 0 0, 50% 0);"></div>
+<div class="text-center z-10">
+<div class="font-display-lg text-[24px] font-bold text-text-main leading-none">342</div>
+<div class="font-label-sm text-label-sm text-text-muted mt-1">Total Bookings</div>
+</div>
+</div>
+</div>
+<!-- Legend -->
+<div class="mt-6 space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="font-label-md text-label-md text-text-muted">Direct Booking</span>
+</div>
+<span class="font-label-md text-label-md font-bold">55%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="font-label-md text-label-md text-text-muted">Airbnb</span>
+</div>
+<span class="font-label-md text-label-md font-bold">30%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-tertiary-fixed-dim"></div>
+<span class="font-label-md text-label-md text-text-muted">Booking.com</span>
+</div>
+<span class="font-label-md text-label-md font-bold">15%</span>
+</div>
+</div>
+</div>
+</section>
+<!-- My Properties Grid -->
+<section>
+<div class="flex justify-between items-end mb-6">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-text-main">My Properties</h2>
+<p class="font-body-md text-body-md text-text-muted mt-1">Manage your premium portfolio listings.</p>
+</div>
+<a class="text-primary font-label-md text-label-md hover:underline flex items-center gap-1" href="#">
+                            View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Property Card 1 -->
+<div class="bg-surface rounded-xl overflow-hidden border border-border-subtle shadow-[0px_4px_20px_rgba(0,0,0,0.03)] hover:shadow-lg transition-shadow duration-300 flex flex-col">
+<div class="relative h-48 w-full bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A striking modern luxury villa with a massive glass facade and minimalist concrete architecture. The property sits on a slight elevation surrounded by manicured green lawns and subtle landscaping. The lighting is early morning, casting long soft shadows and illuminating the clean interior through the glass. The mood is serene, high-end, and exclusive, fitting a premium real estate portfolio." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHrUClJj7YTL1gJoy5smCC1er53AUuPveoenIZZ65_c7o8sEWUNz2ljMmpaN87649-6Y0xApNpq9MYbHnrEKI9Ltjf7BnU8p89UMM9_WdNjcDB3Tgsl78tFZ5ePH-Hn-3yaieE29_yU3llo5JCKrxW_z33I-5DPQ9tiW2ISB-oqFtaraeAuiUj0Tg5iY441PFNYk8QMqrFGs_EI_AYpOpY9m83v8D4-A7OQonuyG7U_RNIGQhKd497LI3kTdumStvsDQTAH7P9_Hbh"/>
+<!-- Status Badge Overlay -->
+<div class="absolute top-3 right-3 bg-secondary/90 text-on-secondary font-label-sm text-label-sm px-2.5 py-1 rounded-md shadow-sm backdrop-blur-md">
+                                    Available
+                                </div>
+</div>
+<div class="p-5 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-headline-md text-text-main line-clamp-1">The Glass House Retreat</h3>
+<span class="font-label-md text-label-md font-bold text-primary">$450<span class="text-text-muted font-normal text-xs">/nt</span></span>
+</div>
+<p class="font-body-md text-body-md text-text-muted flex items-center gap-1 mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span> Austin, Texas
+                                </p>
+<div class="mt-auto border-t border-border-subtle pt-4 flex items-center justify-between">
+<!-- Toggle Switch -->
+<div class="flex items-center gap-2">
+<div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 opacity-0" id="toggle1" name="toggle1" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle1"></label>
+</div>
+<span class="font-label-sm text-label-sm text-text-muted">Active</span>
+</div>
+<button class="px-4 py-1.5 border border-primary text-primary font-label-md text-label-md rounded-lg hover:bg-primary-container/5 transition-colors">
+                                        Edit
+                                    </button>
+</div>
+</div>
+</div>
+<!-- Property Card 2 -->
+<div class="bg-surface rounded-xl overflow-hidden border border-border-subtle shadow-[0px_4px_20px_rgba(0,0,0,0.03)] hover:shadow-lg transition-shadow duration-300 flex flex-col">
+<div class="relative h-48 w-full bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A sophisticated downtown penthouse apartment interior featuring floor-to-ceiling windows with a sweeping view of a modern city skyline at twilight. The interior decor is sleek and minimal, utilizing deep indigo velvet furniture and polished dark wood accents. Warm, subtle ambient lighting highlights the premium finishes. The mood is urban, luxurious, and highly professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDmgslI-ntbkwL1irlYT7ut-1yRY5eMQ5AAidZxZMi9j_UONN9sUB6KQa4trv9hLdMj1a-PI3Cv_QH2d5iJM-2RBM6yTr3lSuNrK4fOfHSUutd03wr_gbbCxA1GxJf-URZF4qGpfzOBhacgJ08wGqpHfS1w7pNVbvA-f7Iyj_XIM484jXAQlsZ7vOQNtdiLxyAi5f0WEZIxcndj3cJMqIHrnmA6Jn8JQO_x1oECo2dbcnn3HZeJ5HBDuodqwgfe_m21JiUUfGYURkW"/>
+<!-- Status Badge Overlay -->
+<div class="absolute top-3 right-3 bg-surface-variant text-on-surface-variant font-label-sm text-label-sm px-2.5 py-1 rounded-md shadow-sm backdrop-blur-md">
+                                    Booked (3 days)
+                                </div>
+</div>
+<div class="p-5 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-headline-md text-text-main line-clamp-1">Skyline Penthouse Suite</h3>
+<span class="font-label-md text-label-md font-bold text-primary">$850<span class="text-text-muted font-normal text-xs">/nt</span></span>
+</div>
+<p class="font-body-md text-body-md text-text-muted flex items-center gap-1 mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span> Chicago, Illinois
+                                </p>
+<div class="mt-auto border-t border-border-subtle pt-4 flex items-center justify-between">
+<!-- Toggle Switch -->
+<div class="flex items-center gap-2">
+<div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 opacity-0" id="toggle2" name="toggle2" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle2"></label>
+</div>
+<span class="font-label-sm text-label-sm text-text-muted">Active</span>
+</div>
+<button class="px-4 py-1.5 border border-primary text-primary font-label-md text-label-md rounded-lg hover:bg-primary-container/5 transition-colors">
+                                        Edit
+                                    </button>
+</div>
+</div>
+</div>
+<!-- Property Card 3 -->
+<div class="bg-surface rounded-xl overflow-hidden border border-border-subtle shadow-[0px_4px_20px_rgba(0,0,0,0.03)] hover:shadow-lg transition-shadow duration-300 flex flex-col">
+<div class="relative h-48 w-full bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="An elegant, modern cabin nestled in a serene forest environment. The architecture blends rustic timber with contemporary expansive glass walls. The lighting is golden hour, creating a warm, inviting glow on the wooden textures and contrasting with the cool deep greens of the surrounding pine trees. The aesthetic is premium escapism, quiet luxury, and pristine nature." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD601C3etOW3cHnIBS5J2RvcMc2uHwQYfcucMcEtxGUpcAluQKHz9jlBVTr_ofkZaY9T4vy2fxdUWG5BI8wXHNUsqds7CJp-KlaPZc2WzLcvhwWp6wRZqcCntYqV-0DojKD6mXfbeVD1NTO2oGTKmMNNqQeTF1nx5BoUPgGsSblb2pJ3u8mwHu4I1-a19U1leHU4ZSur7YsZklaTfadP4fYodEEu0P6l_ZEThLU_wbi3IFlKkihVHGhAyUas2I42tKdwpkqqF_Pw3Um"/>
+<!-- Status Badge Overlay -->
+<div class="absolute top-3 right-3 bg-error/10 text-error font-label-sm text-label-sm px-2.5 py-1 rounded-md shadow-sm backdrop-blur-md border border-error/20">
+                                    Maintenance
+                                </div>
+</div>
+<div class="p-5 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-headline-md text-text-main line-clamp-1">Pinecrest Alpine Lodge</h3>
+<span class="font-label-md text-label-md font-bold text-primary">$320<span class="text-text-muted font-normal text-xs">/nt</span></span>
+</div>
+<p class="font-body-md text-body-md text-text-muted flex items-center gap-1 mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span> Denver, Colorado
+                                </p>
+<div class="mt-auto border-t border-border-subtle pt-4 flex items-center justify-between">
+<!-- Toggle Switch -->
+<div class="flex items-center gap-2 opacity-50">
+<div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 opacity-0" id="toggle3" name="toggle3" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle3"></label>
+</div>
+<span class="font-label-sm text-label-sm text-text-muted">Inactive</span>
+</div>
+<button class="px-4 py-1.5 border border-primary text-primary font-label-md text-label-md rounded-lg hover:bg-primary-container/5 transition-colors">
+                                        Edit
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom padding for scroll -->
+<div class="h-12 w-full"></div>
+</div>
+</main>
+</div>
+</body></html>

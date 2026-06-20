@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-on-surface font-sans antialiased;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-white/80 backdrop-blur-xl border border-white/30;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+  }
+
+  .btn-primary-nestify {
+    @apply btn bg-primary hover:bg-primary-container text-white border-none;
+  }
+
+  .btn-outline-nestify {
+    @apply btn btn-outline border-primary text-primary hover:bg-primary/5;
+  }
+
+  .form-input-nestify {
+    @apply input input-bordered w-full bg-surface focus:border-primary focus:outline-none;
+  }
+
+  .form-label-nestify {
+    @apply label-text font-medium text-on-surface-variant mb-1;
+  }
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}

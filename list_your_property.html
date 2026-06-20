@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nestify - Add Property</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#f2f4f6",
+                    "dark-bg": "#0F172A",
+                    "secondary-container": "#6cf8bb",
+                    "tertiary-container": "#885500",
+                    "on-primary-container": "#dad7ff",
+                    "text-muted": "#64748B",
+                    "background": "#f7f9fb",
+                    "outline": "#777587",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "surface-dim": "#d8dadc",
+                    "on-secondary-fixed-variant": "#005236",
+                    "tertiary-fixed": "#ffddb8",
+                    "on-tertiary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "surface-container": "#eceef0",
+                    "on-surface": "#191c1e",
+                    "primary": "#3525cd",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#684000",
+                    "on-secondary-fixed": "#002113",
+                    "surface": "#FFFFFF",
+                    "secondary": "#006c49",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-tertiary-container": "#ffd4a4",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#2a1700",
+                    "surface-container-highest": "#e0e3e5",
+                    "primary-container": "#4f46e5",
+                    "on-error": "#ffffff",
+                    "dark-surface": "#1E293B",
+                    "surface-variant": "#e0e3e5",
+                    "border-subtle": "#E2E8F0",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "on-secondary-container": "#00714d",
+                    "surface-bright": "#f7f9fb",
+                    "surface-container-high": "#e6e8ea",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-tint": "#4d44e3",
+                    "on-primary-fixed": "#0f0069",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "inverse-surface": "#2d3133",
+                    "secondary-fixed-dim": "#4edea3",
+                    "text-main": "#0F172A",
+                    "inverse-primary": "#c3c0ff",
+                    "outline-variant": "#c7c4d8",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#464555",
+                    "primary-fixed": "#e2dfff",
+                    "on-primary": "#ffffff",
+                    "on-background": "#191c1e",
+                    "on-primary-fixed-variant": "#3323cc"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "margin-desktop": "48px",
+                    "container-max": "1280px",
+                    "base": "8px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "label-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                    "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                    "label-sm": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                    "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                    "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                    "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                    "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                    "label-md": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600" }]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .form-input {
+            @apply w-full bg-surface-bright border border-border-subtle rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200;
+        }
+        .form-label {
+            @apply block font-label-md text-label-md text-on-surface-variant mb-2;
+        }
+        .step-container {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+        .step-container.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .amenity-chip {
+            @apply flex items-center gap-2 px-4 py-2 border border-border-subtle rounded-full cursor-pointer transition-all duration-200 select-none;
+        }
+        .amenity-chip input:checked + div {
+            @apply text-primary font-medium;
+        }
+        .amenity-chip:has(input:checked) {
+            @apply bg-primary/5 border-primary/30;
+        }
+    </style>
+</head>
+<body class="bg-surface-container-low text-on-surface min-h-screen font-body-md antialiased selection:bg-primary/20">
+<!-- Top Context Bar (Task-Focused Navigation Suppression) -->
+<header class="w-full px-margin-mobile md:px-margin-desktop py-6 sticky top-0 z-50 bg-surface-container-low/80 backdrop-blur-md">
+<div class="max-w-3xl mx-auto flex items-center justify-between">
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group">
+<span class="material-symbols-outlined text-[20px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+<span class="font-label-md text-label-md">Back to Dashboard</span>
+</button>
+<div class="font-headline-md text-headline-md text-on-surface">Add New Listing</div>
+<button class="font-label-md text-label-md text-on-surface-variant hover:text-error transition-colors">Cancel</button>
+</div>
+</header>
+<main class="w-full px-margin-mobile md:px-margin-desktop pb-24">
+<div class="max-w-3xl mx-auto">
+<!-- Main Form Card -->
+<div class="bg-surface rounded-xl shadow-sm border border-border-subtle overflow-hidden">
+<!-- Progress Stepper -->
+<div class="border-b border-border-subtle bg-surface-bright/50 px-8 py-6">
+<div class="flex items-center justify-between relative">
+<!-- Connecting Line -->
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-border-subtle -z-10 rounded-full"></div>
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-0 h-1 bg-primary -z-10 rounded-full transition-all duration-500 ease-out" id="progress-bar-fill"></div>
+<!-- Step 1 Indicator -->
+<div class="flex flex-col items-center gap-2 bg-surface px-2 step-indicator" data-step="1">
+<div class="w-10 h-10 rounded-full flex items-center justify-center bg-primary text-on-primary font-label-md text-label-md shadow-sm transition-colors duration-300">1</div>
+<span class="font-label-sm text-label-sm text-on-surface">Basic Info</span>
+</div>
+<!-- Step 2 Indicator -->
+<div class="flex flex-col items-center gap-2 bg-surface px-2 step-indicator" data-step="2">
+<div class="w-10 h-10 rounded-full flex items-center justify-center bg-surface border-2 border-border-subtle text-on-surface-variant font-label-md text-label-md transition-colors duration-300">2</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Location &amp; Details</span>
+</div>
+<!-- Step 3 Indicator -->
+<div class="flex flex-col items-center gap-2 bg-surface px-2 step-indicator" data-step="3">
+<div class="w-10 h-10 rounded-full flex items-center justify-center bg-surface border-2 border-border-subtle text-on-surface-variant font-label-md text-label-md transition-colors duration-300">3</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Media</span>
+</div>
+</div>
+</div>
+<div class="p-8 md:p-12">
+<!-- STEP 1: Basic Info -->
+<div class="step-container active" id="step-1">
+<div class="mb-8">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Let's start with the basics</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Provide a clear, attractive title and description for your property.</p>
+</div>
+<div class="space-y-6">
+<div>
+<label class="form-label" for="prop-title">Property Title</label>
+<input class="form-input" id="prop-title" placeholder="e.g., Luxury Downtown Loft with Skyline Views" type="text"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="form-label" for="prop-type">Property Type</label>
+<div class="relative">
+<select class="form-input appearance-none" id="prop-type">
+<option>Apartment</option>
+<option>House</option>
+<option>Condo</option>
+<option>Townhouse</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<div>
+<label class="form-label" for="prop-price">Monthly Rent ($)</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">attach_money</span>
+<input class="form-input pl-11" id="prop-price" placeholder="0.00" type="number"/>
+</div>
+</div>
+</div>
+<div>
+<label class="form-label" for="prop-desc">Description</label>
+<textarea class="form-input resize-none" id="prop-desc" placeholder="Describe the key features, neighborhood vibe, and why someone would love living here..." rows="5"></textarea>
+</div>
+</div>
+</div>
+<!-- STEP 2: Location & Amenities -->
+<div class="step-container" id="step-2">
+<div class="mb-8">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Where is it located?</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Add the address and highlight the best amenities your property offers.</p>
+</div>
+<div class="space-y-8">
+<!-- Location -->
+<div class="space-y-6">
+<div>
+<label class="form-label" for="prop-address">Street Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">location_on</span>
+<input class="form-input pl-11" id="prop-address" placeholder="123 Main St" type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="col-span-2">
+<label class="form-label" for="prop-city">City</label>
+<input class="form-input" id="prop-city" placeholder="City" type="text"/>
+</div>
+<div>
+<label class="form-label" for="prop-state">State</label>
+<input class="form-input" id="prop-state" placeholder="State" type="text"/>
+</div>
+<div>
+<label class="form-label" for="prop-zip">Zip</label>
+<input class="form-input" id="prop-zip" placeholder="Zip" type="text"/>
+</div>
+</div>
+</div>
+<hr class="border-border-subtle"/>
+<!-- Details -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<div>
+<label class="form-label" for="prop-beds">Bedrooms</label>
+<input class="form-input" id="prop-beds" min="0" placeholder="0" type="number"/>
+</div>
+<div>
+<label class="form-label" for="prop-baths">Bathrooms</label>
+<input class="form-input" id="prop-baths" min="0" placeholder="0" step="0.5" type="number"/>
+</div>
+<div class="col-span-2">
+<label class="form-label" for="prop-sqft">Square Footage</label>
+<input class="form-input" id="prop-sqft" placeholder="e.g. 1200" type="number"/>
+</div>
+</div>
+<hr class="border-border-subtle"/>
+<!-- Amenities -->
+<div>
+<label class="form-label mb-4">Key Amenities</label>
+<div class="flex flex-wrap gap-3">
+<label class="amenity-chip">
+<input class="hidden" type="checkbox"/>
+<div class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">wifi</span> High-Speed WiFi
+                                        </div>
+</label>
+<label class="amenity-chip">
+<input class="hidden" type="checkbox"/>
+<div class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">local_parking</span> Parking
+                                        </div>
+</label>
+<label class="amenity-chip">
+<input class="hidden" type="checkbox"/>
+<div class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">pets</span> Pet Friendly
+                                        </div>
+</label>
+<label class="amenity-chip">
+<input class="hidden" type="checkbox"/>
+<div class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">ac_unit</span> Air Conditioning
+                                        </div>
+</label>
+<label class="amenity-chip">
+<input class="hidden" type="checkbox"/>
+<div class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">laundry</span> In-Unit Washer
+                                        </div>
+</label>
+<label class="amenity-chip">
+<input class="hidden" type="checkbox"/>
+<div class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">pool</span> Swimming Pool
+                                        </div>
+</label>
+<label class="amenity-chip">
+<input class="hidden" type="checkbox"/>
+<div class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">fitness_center</span> Gym Access
+                                        </div>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- STEP 3: Image Upload -->
+<div class="step-container" id="step-3">
+<div class="mb-8">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Showcase your property</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">High-quality photos increase rental interest. Upload at least 5 images.</p>
+</div>
+<!-- Drag and Drop Zone -->
+<div class="border-2 border-dashed border-outline-variant bg-surface-bright rounded-xl p-12 flex flex-col items-center justify-center text-center hover:bg-surface-container-low transition-colors cursor-pointer group">
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-[32px]">cloud_upload</span>
+</div>
+<h3 class="font-headline-md-mobile text-headline-md-mobile text-on-surface mb-2">Drag &amp; drop your photos here</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Supports JPG, PNG, WEBP. Max 10MB per file.</p>
+<button class="bg-surface border border-border-subtle text-on-surface font-label-md text-label-md px-6 py-2.5 rounded-lg hover:bg-surface-container-highest transition-colors shadow-sm">
+                                Browse Files
+                            </button>
+</div>
+<!-- Uploaded Preview (Simulated) -->
+<div class="mt-8">
+<h4 class="font-label-md text-label-md text-on-surface mb-4">Uploaded Images (3)</h4>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="relative group rounded-lg overflow-hidden aspect-video bg-surface-container-high border border-border-subtle">
+<img class="w-full h-full object-cover" data-alt="A bright, airy modern living room in a luxury apartment, featuring large floor-to-ceiling windows letting in ample natural daylight. The decor is minimalist with a plush white sofa, light oak hardwood floors, and a sleek glass coffee table. The overall aesthetic is clean, premium, and sophisticated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPiGbK7WjCRIEOgwrPcOwV2fT1auFyDlkwlFIyTfM-u3yoMsYNHKDc6KSo88nidFqy0JQ9cNy6Vposaqfk1BPDhPsuzmpNWIyZh7uTbhKptNR6rWAIfZ_w5HCT4QqHweLafXsU7zr0ZfDBwoBhQpMngo9qF-XtxBppGQAl4OLyNOqQi0007AU--boOG0No3qU1QNG7LpY8o0NU0psc9qZVBZGU16RaylzGiKokte64tH4aGSQs1NFbx1M0oqLmVEYQTif_UndQTnxZ"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="text-white hover:text-error transition-colors"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+<div class="relative group rounded-lg overflow-hidden aspect-video bg-surface-container-high border border-border-subtle">
+<img class="w-full h-full object-cover" data-alt="A high-end modern kitchen with sleek matte navy blue cabinetry and pristine white marble countertops. Stainless steel appliances are seamlessly integrated. Warm under-cabinet lighting creates a cozy yet luxurious atmosphere. The perspective is shot straight-on to highlight the clean geometric lines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJM9S2LQkaBBVQbavs3E9-TplcD1Rg9md2d3a-UushEWLfbYXriFiOICtkbW9do8MUZQC_Vx4jhvns0OcJqUyQV1W930csBLIY01xuWJoFd9NIq_KRvGTMlfTlvYpElAIdFnLIrPfk4a68wQFVyv4hlQYJUSTaftJore4Kvu2ixehvkH0HoL8DH2y1ZX4z1tOgF5Cn2A6O6fp9Z13NnLoV3OBeWGjhSoc_VbxQuaVptM9CO1UoXH6nCHKrW_Z4GuHzelsctnEly5lL"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="text-white hover:text-error transition-colors"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+<div class="relative group rounded-lg overflow-hidden aspect-video bg-surface-container-high border border-border-subtle">
+<img class="w-full h-full object-cover" data-alt="A serene, minimalist bedroom with a king-sized bed dressed in crisp, high thread-count white linens. A subtle textured accent wall in soft charcoal gray adds depth. Natural morning light filters softly through sheer curtains, emphasizing a calm, restful environment suitable for a premium rental." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjF8MeBvMWbUKlLNd1nadCNj7Ot_RNvlGzAYIWoWAhJ2oORu-D2fE8FFVrTIL9Hq8vMabYmBqPANrD4M7PfJAXpC-oZxz9NSkKgPS0oK71NBa8Me6Sx2EmGeaqxMc12P2uXIEvgKqm8_bp46Umygh0yAMJAXmjp1JkCcogqPJ3JCIKXfc8Ks-CjK6iVkF4cZBmR1DQjDRvrF5iJrcrnZKZkRnrQNnthJeHqI51MJfFWdxIgAoKFmWN9f0dq4-EzboD8wNQTSsm2-8H"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="text-white hover:text-error transition-colors"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+<!-- Add placeholder slot -->
+<div class="rounded-lg aspect-video border-2 border-dashed border-outline-variant bg-surface-bright flex flex-col items-center justify-center text-on-surface-variant cursor-pointer hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined mb-1">add_photo_alternate</span>
+<span class="font-label-sm text-label-sm">Add More</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="bg-surface-container-lowest border-t border-border-subtle px-8 py-5 flex items-center justify-between">
+<button class="hidden px-6 py-2.5 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" id="btn-back">
+                        Back
+                    </button>
+<!-- Spacer when back is hidden -->
+<div class="w-20" id="btn-spacer"></div>
+<div class="flex gap-4">
+<button class="px-6 py-2.5 font-label-md text-label-md text-on-surface bg-surface border border-border-subtle rounded-lg hover:bg-surface-container-low transition-colors shadow-sm">
+                            Save Draft
+                        </button>
+<button class="px-6 py-2.5 font-label-md text-label-md text-on-primary bg-primary rounded-lg hover:bg-on-primary-fixed-variant transition-colors shadow-sm flex items-center gap-2" id="btn-next">
+                            Next Step <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simple JS for Step Navigation to make it functional for demonstration
+        document.addEventListener('DOMContentLoaded', () => {
+            const steps = [
+                document.getElementById('step-1'),
+                document.getElementById('step-2'),
+                document.getElementById('step-3')
+            ];
+            const indicators = document.querySelectorAll('.step-indicator');
+            const progressBarFill = document.getElementById('progress-bar-fill');
+            const btnNext = document.getElementById('btn-next');
+            const btnBack = document.getElementById('btn-back');
+            const btnSpacer = document.getElementById('btn-spacer');
+            
+            let currentStep = 0;
+
+            function updateUI() {
+                // Update Steps visibility
+                steps.forEach((step, index) => {
+                    if (index === currentStep) {
+                        step.classList.add('active');
+                    } else {
+                        step.classList.remove('active');
+                    }
+                });
+
+                // Update Progress Bar
+                // Width: Step 0 -> 0%, Step 1 -> 50%, Step 2 -> 100%
+                const progressPercentage = (currentStep / (steps.length - 1)) * 100;
+                progressBarFill.style.width = `${progressPercentage}%`;
+
+                // Update Indicators
+                indicators.forEach((indicator, index) => {
+                    const circle = indicator.querySelector('div');
+                    const text = indicator.querySelector('span');
+                    
+                    if (index <= currentStep) {
+                        // Completed or Current
+                        circle.classList.remove('bg-surface', 'border-2', 'border-border-subtle', 'text-on-surface-variant');
+                        circle.classList.add('bg-primary', 'text-on-primary');
+                        text.classList.remove('text-on-surface-variant');
+                        text.classList.add('text-on-surface');
+                        
+                        if(index < currentStep) {
+                             circle.innerHTML = '<span class="material-symbols-outlined text-[20px]">check</span>';
+                        } else {
+                             circle.innerHTML = (index + 1).toString();
+                        }
+
+                    } else {
+                        // Future
+                        circle.classList.add('bg-surface', 'border-2', 'border-border-subtle', 'text-on-surface-variant');
+                        circle.classList.remove('bg-primary', 'text-on-primary');
+                        text.classList.add('text-on-surface-variant');
+                        text.classList.remove('text-on-surface');
+                        circle.innerHTML = (index + 1).toString();
+                    }
+                });
+
+                // Update Buttons
+                if (currentStep === 0) {
+                    btnBack.classList.add('hidden');
+                    btnSpacer.classList.remove('hidden');
+                } else {
+                    btnBack.classList.remove('hidden');
+                    btnSpacer.classList.add('hidden');
+                }
+
+                if (currentStep === steps.length - 1) {
+                    btnNext.innerHTML = 'Publish Listing <span class="material-symbols-outlined text-[18px]">publish</span>';
+                } else {
+                    btnNext.innerHTML = 'Next Step <span class="material-symbols-outlined text-[18px]">arrow_forward</span>';
+                }
+            }
+
+            btnNext.addEventListener('click', () => {
+                if (currentStep < steps.length - 1) {
+                    currentStep++;
+                    updateUI();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    // Submit logic here
+                    alert('Listing Published Successfully!');
+                }
+            });
+
+            btnBack.addEventListener('click', () => {
+                if (currentStep > 0) {
+                    currentStep--;
+                    updateUI();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+
+            // Initialize
+            updateUI();
+        });
+    </script>
+</body></html>
