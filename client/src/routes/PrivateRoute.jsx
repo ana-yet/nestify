@@ -1,13 +1,13 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import useAuth from '../hooks/useAuth.js';
-import FullPageLoader from '../components/shared/FullPageLoader.jsx';
+import LoadingSpinner from '../components/shared/LoadingSpinner.jsx';
 
 const PrivateRoute = () => {
   const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
-    return <FullPageLoader message="Restoring your session..." />;
+    return <LoadingSpinner fullScreen message="Restoring your session..." />;
   }
 
   if (!isAuthenticated) {

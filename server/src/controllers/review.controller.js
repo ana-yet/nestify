@@ -1,150 +1,141 @@
 import Review from '../models/Review.js';
 import Booking from '../models/Booking.js';
 import User from '../models/User.js';
-import ApiError from '../utils/ApiError.js';
-import catchAsync from '../utils/catchAsync.js';
-import { updatePropertyRating } from '../services/reviewRating.service.js';
+import Property from '../models/Property.js';
+import mongoose from 'mongoose';
 
-const serializeReview = (doc) => (doc.toObject ? doc.toObject() : doc);
+// Helper: update property average rating
+const updatePropertyRating = async (propertyId) => {
+  const objectId = new mongoose.Types.ObjectId(propertyId);
+  const [stats] = await Review.aggregate([
+    { $match: { propertyId: objectId } },
+    { $group: { _id: null, avg: { $avg: '$rating' }, count: { $sum: 1 } } },
+  ]);
 
-const findApprovedBooking = async (userId, propertyId) =>
-  Booking.findOne({
-    tenantId: userId,
-    propertyId,
-    bookingStatus: 'approved',
-    paymentStatus: 'paid',
+  await Property.findByIdAndUpdate(propertyId, {
+    averageRating: stats?.avg ? Math.round(stats.avg * 10) / 10 : 0,
+    reviewCount: stats?.count || 0,
   });
+};
 
-export const getFeaturedReviews = catchAsync(async (req, res) => {
-  const reviews = await Review.find({ rating: { $gte: 4 } })
-    .sort({ rating: -1, createdAt: -1 })
-    .limit(4)
-    .populate('propertyId', 'title location images');
+// GET /reviews/featured
+export const getFeaturedReviews = async (req, res, next) => {
+  try {
+    const reviews = await Review.find({ rating: { $gte: 4 } })
+      .sort({ rating: -1, createdAt: -1 })
+      .limit(4)
+      .populate('propertyId', 'title location images');
 
-  res.status(200).json({
-    success: true,
-    data: reviews.map(serializeReview),
-  });
-});
+    res.status(200).json({ success: true, data: reviews });
+  } catch (error) {
+    next(error);
+  }
+};
 
-export const getPropertyReviews = catchAsync(async (req, res) => {
-  const { propertyId } = req.params;
+// GET /reviews/property/:propertyId
+export const getPropertyReviews = async (req, res, next) => {
+  try {
+    const { propertyId } = req.params;
+    const reviews = await Review.find({ propertyId }).sort({ createdAt: -1 }).lean();
 
-  const reviews = await Review.find({ propertyId })
-    .sort({ createdAt: -1 })
-    .lean();
+    let userReview = null;
+    let canReview = false;
 
-  let userReview = null;
-  let canReview = false;
+    if (req.user?.role === 'tenant') {
+      userReview = await Review.findOne({ propertyId, userId: req.user.userId }).lean();
+      if (!userReview) {
+        const booking = await Booking.findOne({
+          tenantId: req.user.userId,
+          propertyId,
+          bookingStatus: 'approved',
+          paymentStatus: 'paid',
+        });
+        canReview = Boolean(booking);
+      }
+    }
 
-  if (req.user?.role === 'tenant') {
-    userReview = await Review.findOne({
+    res.status(200).json({ success: true, data: { reviews, userReview, canReview } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// POST /reviews
+export const createReview = async (req, res, next) => {
+  try {
+    const { propertyId, rating, comment } = req.body;
+
+    // Must have approved + paid booking
+    const booking = await Booking.findOne({
+      tenantId: req.user.userId,
+      propertyId,
+      bookingStatus: 'approved',
+      paymentStatus: 'paid',
+    });
+    if (!booking) {
+      return res.status(403).json({ success: false, message: 'You need an approved booking to review' });
+    }
+
+    // Check duplicate
+    const existing = await Review.findOne({ userId: req.user.userId, propertyId });
+    if (existing) {
+      return res.status(409).json({ success: false, message: 'Already reviewed' });
+    }
+
+    const user = await User.findById(req.user.userId).select('name email');
+
+    const review = await Review.create({
       propertyId,
       userId: req.user.userId,
-    }).lean();
+      bookingId: booking._id,
+      rating,
+      comment: comment.trim(),
+      userSnapshot: { name: user.name, email: user.email },
+    });
 
-    if (!userReview) {
-      const approvedBooking = await findApprovedBooking(req.user.userId, propertyId);
-      canReview = Boolean(approvedBooking);
+    await updatePropertyRating(propertyId);
+
+    res.status(201).json({ success: true, message: 'Review submitted', data: { review } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// PATCH /reviews/:id
+export const updateReview = async (req, res, next) => {
+  try {
+    const review = await Review.findById(req.params.id);
+    if (!review) return res.status(404).json({ success: false, message: 'Review not found' });
+    if (review.userId.toString() !== req.user.userId) {
+      return res.status(403).json({ success: false, message: 'Not authorized' });
     }
+
+    if (req.body.rating) review.rating = req.body.rating;
+    if (req.body.comment) review.comment = req.body.comment.trim();
+    await review.save();
+    await updatePropertyRating(review.propertyId);
+
+    res.status(200).json({ success: true, message: 'Review updated', data: { review } });
+  } catch (error) {
+    next(error);
   }
+};
 
-  res.status(200).json({
-    success: true,
-    data: {
-      reviews,
-      userReview,
-      canReview,
-    },
-  });
-});
+// DELETE /reviews/:id
+export const deleteReview = async (req, res, next) => {
+  try {
+    const review = await Review.findById(req.params.id);
+    if (!review) return res.status(404).json({ success: false, message: 'Review not found' });
+    if (review.userId.toString() !== req.user.userId) {
+      return res.status(403).json({ success: false, message: 'Not authorized' });
+    }
 
-export const createReview = catchAsync(async (req, res) => {
-  const { propertyId, rating, comment } = req.body;
+    const propertyId = review.propertyId;
+    await Review.findByIdAndDelete(req.params.id);
+    await updatePropertyRating(propertyId);
 
-  const approvedBooking = await findApprovedBooking(req.user.userId, propertyId);
-  if (!approvedBooking) {
-    throw new ApiError(403, 'You must have an approved booking to review this property');
+    res.status(200).json({ success: true, message: 'Review deleted' });
+  } catch (error) {
+    next(error);
   }
-
-  const existing = await Review.findOne({
-    userId: req.user.userId,
-    propertyId,
-  });
-
-  if (existing) {
-    throw new ApiError(409, 'You have already reviewed this property');
-  }
-
-  const user = await User.findById(req.user.userId).select('name email');
-  if (!user) {
-    throw new ApiError(404, 'User not found');
-  }
-
-  const review = await Review.create({
-    propertyId,
-    userId: req.user.userId,
-    bookingId: approvedBooking._id,
-    rating,
-    comment: comment.trim(),
-    userSnapshot: {
-      name: user.name,
-      email: user.email,
-    },
-  });
-
-  await updatePropertyRating(propertyId);
-
-  res.status(201).json({
-    success: true,
-    message: 'Review submitted successfully',
-    data: { review: serializeReview(review) },
-  });
-});
-
-export const updateReview = catchAsync(async (req, res) => {
-  const review = await Review.findById(req.params.id);
-
-  if (!review) {
-    throw new ApiError(404, 'Review not found');
-  }
-
-  if (review.userId.toString() !== req.user.userId) {
-    throw new ApiError(403, 'You can only edit your own reviews');
-  }
-
-  const { rating, comment } = req.body;
-
-  if (rating !== undefined) review.rating = rating;
-  if (comment !== undefined) review.comment = comment.trim();
-
-  await review.save();
-  await updatePropertyRating(review.propertyId);
-
-  res.status(200).json({
-    success: true,
-    message: 'Review updated successfully',
-    data: { review: serializeReview(review) },
-  });
-});
-
-export const deleteReview = catchAsync(async (req, res) => {
-  const review = await Review.findById(req.params.id);
-
-  if (!review) {
-    throw new ApiError(404, 'Review not found');
-  }
-
-  if (review.userId.toString() !== req.user.userId) {
-    throw new ApiError(403, 'You can only delete your own reviews');
-  }
-
-  const { propertyId } = review;
-  await review.deleteOne();
-  await updatePropertyRating(propertyId);
-
-  res.status(200).json({
-    success: true,
-    message: 'Review deleted successfully',
-  });
-});
+};

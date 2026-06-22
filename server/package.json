@@ -6,9 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "seed:admin": "node src/utils/seedAdmin.js",
-    "seed:properties": "node src/utils/seedProperties.js"
+    "dev": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",

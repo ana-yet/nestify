@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { fetchAdminTransactions } from '../../api/admin.api.js';
-import QueryState from '../../components/shared/QueryState.jsx';
+import LoadingSpinner from '../../components/shared/LoadingSpinner.jsx';
+import EmptyState from '../../components/shared/EmptyState.jsx';
 import Pagination from '../../components/shared/Pagination.jsx';
 
 const AdminTransactionsPage = () => {
@@ -58,55 +59,58 @@ const AdminTransactionsPage = () => {
         </form>
       </div>
 
-      <QueryState
-        isLoading={isLoading}
-        isError={isError}
-        error={error}
-        onRetry={refetch}
-        isEmpty={!isLoading && transactions.length === 0}
-        emptyIcon="payments"
-        emptyTitle={search ? 'No matching transactions' : 'No transactions yet'}
-        loadingMessage="Loading transactions..."
-      >
-        <div className="bg-surface rounded-xl border border-border-subtle overflow-x-auto shadow-ambient">
-          <table className="table w-full">
-            <thead>
-              <tr className="bg-surface-container-low">
-                <th>Transaction ID</th>
-                <th>Property Name</th>
-                <th>Tenant Name</th>
-                <th>Owner Name</th>
-                <th>Amount</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions.map((txn) => (
-                <tr key={txn._id} className="hover:bg-surface-container-low/40">
-                  <td className="font-mono text-xs max-w-[100px] truncate" title={txn._id}>
-                    {txn._id}
-                  </td>
-                  <td className="font-medium text-sm max-w-[160px] truncate">
-                    {txn.propertyId?.title || '—'}
-                  </td>
-                  <td className="text-sm">{txn.tenantId?.name || '—'}</td>
-                  <td className="text-sm">{txn.ownerId?.name || '—'}</td>
-                  <td className="font-medium">${txn.amount?.toLocaleString()}</td>
-                  <td className="text-sm text-text-muted whitespace-nowrap">
-                    {format(new Date(txn.paidAt || txn.createdAt), 'MMM d, yyyy')}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <Pagination
-          page={pagination.page}
-          totalPages={pagination.totalPages}
-          onPageChange={setPage}
+      {isLoading ? (
+        <LoadingSpinner message="Loading transactions..." />
+      ) : isError ? (
+        <EmptyState
+          icon="error_outline"
+          title="Failed to load transactions"
+          description={error?.message || 'Something went wrong'}
+          action={<button className="btn btn-primary-nestify" onClick={refetch}>Retry</button>}
         />
-      </QueryState>
+      ) : transactions.length === 0 ? (
+        <EmptyState
+          icon="payments"
+          title={search ? 'No matching transactions' : 'No transactions yet'}
+        />
+      ) : (
+        <>
+          <div className="bg-surface rounded-xl border border-border-subtle overflow-x-auto shadow-ambient">
+            <table className="table w-full">
+              <thead>
+                <tr className="bg-surface-container-low">
+                  <th>Transaction ID</th>
+                  <th>Property Name</th>
+                  <th>Tenant Name</th>
+                  <th>Owner Name</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {transactions.map((txn) => (
+                  <tr key={txn._id} className="hover:bg-surface-container-low/40">
+                    <td className="font-mono text-xs max-w-[100px] truncate" title={txn._id}>
+                      {txn._id}
+                    </td>
+                    <td className="font-medium text-sm max-w-[160px] truncate">
+                      {txn.propertyId?.title || '—'}
+                    </td>
+                    <td className="text-sm">{txn.tenantId?.name || '—'}</td>
+                    <td className="text-sm">{txn.ownerId?.name || '—'}</td>
+                    <td className="font-medium">${txn.amount?.toLocaleString()}</td>
+                    <td className="text-sm text-text-muted whitespace-nowrap">
+                      {format(new Date(txn.paidAt || txn.createdAt), 'MMM d, yyyy')}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <Pagination page={pagination.page} totalPages={pagination.totalPages} onPageChange={setPage} />
+        </>
+      )}
     </div>
   );
 };

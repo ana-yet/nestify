@@ -5,7 +5,7 @@ import AuthLayout from '../components/layout/AuthLayout.jsx';
 import DashboardLayout from '../components/layout/DashboardLayout.jsx';
 import PrivateRoute from './PrivateRoute.jsx';
 import RoleRoute from './RoleRoute.jsx';
-import RouteLoader from '../components/shared/RouteLoader.jsx';
+import LoadingSpinner from '../components/shared/LoadingSpinner.jsx';
 
 const HomePage = lazy(() => import('../pages/HomePage.jsx'));
 const AllPropertiesPage = lazy(() => import('../pages/AllPropertiesPage.jsx'));
@@ -27,7 +27,7 @@ const BookingRequestsPage = lazy(() => import('../pages/owner/BookingRequestsPag
 const AddPropertyPage = lazy(() => import('../pages/owner/AddPropertyPage.jsx'));
 const MyPropertiesPage = lazy(() => import('../pages/owner/MyPropertiesPage.jsx'));
 const EditPropertyPage = lazy(() => import('../pages/owner/EditPropertyPage.jsx'));
-const OwnerProfilePage = lazy(() => import('../pages/owner/OwnerProfilePage.jsx'));
+
 
 const AdminHomePage = lazy(() => import('../pages/admin/AdminHomePage.jsx'));
 const AdminPropertiesPage = lazy(() => import('../pages/admin/AdminPropertiesPage.jsx'));
@@ -35,12 +35,12 @@ const AdminUsersPage = lazy(() => import('../pages/admin/AdminUsersPage.jsx'));
 const AdminBookingsPage = lazy(() => import('../pages/admin/AdminBookingsPage.jsx'));
 const AdminTransactionsPage = lazy(() => import('../pages/admin/AdminTransactionsPage.jsx'));
 const AdminEditPropertyPage = lazy(() => import('../pages/admin/AdminEditPropertyPage.jsx'));
-const AdminProfilePage = lazy(() => import('../pages/admin/AdminProfilePage.jsx'));
+
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
-      <Suspense fallback={<RouteLoader message="Loading page..." />}>
+        <Suspense fallback={<LoadingSpinner fullScreen message="Loading page..." />}>
         <Routes>
           <Route element={<PublicLayout />}>
             <Route index element={<HomePage />} />
@@ -106,7 +106,7 @@ const AppRoutes = () => {
               <Route path="dashboard/owner/add-property" element={<AddPropertyPage />} />
               <Route path="dashboard/owner/properties" element={<MyPropertiesPage />} />
               <Route path="dashboard/owner/edit-property/:id" element={<EditPropertyPage />} />
-              <Route path="dashboard/owner/profile" element={<OwnerProfilePage />} />
+              <Route path="dashboard/owner/profile" element={<ProfilePage />} />
             </Route>
 
             <Route
@@ -122,7 +122,7 @@ const AppRoutes = () => {
               <Route path="dashboard/admin/edit-property/:id" element={<AdminEditPropertyPage />} />
               <Route path="dashboard/admin/bookings" element={<AdminBookingsPage />} />
               <Route path="dashboard/admin/transactions" element={<AdminTransactionsPage />} />
-              <Route path="dashboard/admin/profile" element={<AdminProfilePage />} />
+              <Route path="dashboard/admin/profile" element={<ProfilePage />} />
             </Route>
           </Route>
 

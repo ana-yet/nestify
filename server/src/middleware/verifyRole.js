@@ -1,15 +1,11 @@
-import ApiError from '../utils/ApiError.js';
-
-export const verifyRole = (...allowedRoles) => {
+const verifyRole = (...allowedRoles) => {
   return (req, res, next) => {
     if (!req.user) {
-      return next(new ApiError(401, 'Authentication required'));
+      return res.status(401).json({ success: false, message: 'Authentication required' });
     }
-
     if (!allowedRoles.includes(req.user.role)) {
-      return next(new ApiError(403, 'You do not have permission to access this resource'));
+      return res.status(403).json({ success: false, message: 'Forbidden' });
     }
-
     next();
   };
 };

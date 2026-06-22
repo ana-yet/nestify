@@ -2,10 +2,15 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { fetchAdminBookings } from '../../api/admin.api.js';
-import QueryState from '../../components/shared/QueryState.jsx';
+import LoadingSpinner from '../../components/shared/LoadingSpinner.jsx';
+import EmptyState from '../../components/shared/EmptyState.jsx';
 import Pagination from '../../components/shared/Pagination.jsx';
 import StatusBadge from '../../components/shared/StatusBadge.jsx';
-import PaymentStatusBadge from '../../components/shared/PaymentStatusBadge.jsx';
+
+const PaymentBadge = ({ status }) => {
+  const styles = { paid: 'badge-success', unpaid: 'badge-warning', failed: 'badge-error' };
+  return <span className={`badge badge-sm capitalize ${styles[status] || 'badge-ghost'}`}>{status}</span>;
+};
 
 const AdminBookingsPage = () => {
   const [page, setPage] = useState(1);
@@ -25,75 +30,59 @@ const AdminBookingsPage = () => {
         <p className="text-text-muted mt-1">Monitor booking activity across the platform (read-only)</p>
       </div>
 
-      <QueryState
-        isLoading={isLoading}
-        isError={isError}
-        error={error}
-        onRetry={refetch}
-        isEmpty={!isLoading && bookings.length === 0}
-        emptyIcon="calendar_month"
-        emptyTitle="No bookings yet"
-        loadingMessage="Loading bookings..."
-      >
-        <div className="bg-surface rounded-xl border border-border-subtle overflow-x-auto shadow-ambient">
-          <table className="table w-full">
-            <thead>
-              <tr className="bg-surface-container-low">
-                <th>Tenant</th>
-                <th>Property</th>
-                <th>Owner</th>
-                <th>Amount</th>
-                <th>Booking Status</th>
-                <th>Payment Status</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {bookings.map((booking) => {
-                const tenant = booking.tenantId;
-                const property = booking.propertyId;
-                const owner = booking.ownerId;
-
-                return (
+      {isLoading ? (
+        <LoadingSpinner message="Loading bookings..." />
+      ) : isError ? (
+        <EmptyState
+          icon="error_outline"
+          title="Failed to load bookings"
+          description={error?.message || 'Something went wrong'}
+          action={<button className="btn btn-primary-nestify" onClick={refetch}>Retry</button>}
+        />
+      ) : bookings.length === 0 ? (
+        <EmptyState icon="calendar_month" title="No bookings yet" />
+      ) : (
+        <>
+          <div className="bg-surface rounded-xl border border-border-subtle overflow-x-auto shadow-ambient">
+            <table className="table w-full">
+              <thead>
+                <tr className="bg-surface-container-low">
+                  <th>Tenant</th>
+                  <th>Property</th>
+                  <th>Owner</th>
+                  <th>Amount</th>
+                  <th>Booking Status</th>
+                  <th>Payment Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bookings.map((booking) => (
                   <tr key={booking._id} className="hover:bg-surface-container-low/40">
                     <td>
-                      <p className="font-medium text-sm">
-                        {tenant?.name || booking.tenantInfo?.name || '—'}
-                      </p>
-                      <p className="text-xs text-text-muted">
-                        {tenant?.email || booking.tenantInfo?.email}
-                      </p>
+                      <p className="font-medium text-sm">{booking.tenantId?.name || booking.tenantInfo?.name || '—'}</p>
+                      <p className="text-xs text-text-muted">{booking.tenantId?.email || booking.tenantInfo?.email}</p>
                     </td>
-                    <td className="font-medium text-sm max-w-[160px] truncate">
-                      {property?.title || '—'}
-                    </td>
+                    <td className="font-medium text-sm max-w-[160px] truncate">{booking.propertyId?.title || '—'}</td>
                     <td>
-                      <p className="text-sm">{owner?.name || '—'}</p>
-                      <p className="text-xs text-text-muted">{owner?.email}</p>
+                      <p className="text-sm">{booking.ownerId?.name || '—'}</p>
+                      <p className="text-xs text-text-muted">{booking.ownerId?.email}</p>
                     </td>
                     <td className="font-medium">${booking.amount?.toLocaleString()}</td>
-                    <td>
-                      <StatusBadge status={booking.bookingStatus} />
-                    </td>
-                    <td>
-                      <PaymentStatusBadge status={booking.paymentStatus} />
-                    </td>
+                    <td><StatusBadge status={booking.bookingStatus} /></td>
+                    <td><PaymentBadge status={booking.paymentStatus} /></td>
                     <td className="text-sm text-text-muted whitespace-nowrap">
                       {format(new Date(booking.createdAt), 'MMM d, yyyy')}
                     </td>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-        <Pagination
-          page={pagination.page}
-          totalPages={pagination.totalPages}
-          onPageChange={setPage}
-        />
-      </QueryState>
+          <Pagination page={pagination.page} totalPages={pagination.totalPages} onPageChange={setPage} />
+        </>
+      )}
     </div>
   );
 };

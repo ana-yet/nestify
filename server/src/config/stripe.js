@@ -1,17 +1,11 @@
 import Stripe from 'stripe';
-import ApiError from '../utils/ApiError.js';
 
 let stripeClient = null;
 
 export const getStripe = () => {
-  if (stripeClient) return stripeClient;
-
-  const secretKey = process.env.STRIPE_SECRET_KEY;
-  if (!secretKey) {
-    throw new ApiError(500, 'STRIPE_SECRET_KEY is not configured');
+  if (!stripeClient) {
+    stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY);
   }
-
-  stripeClient = new Stripe(secretKey);
   return stripeClient;
 };
 

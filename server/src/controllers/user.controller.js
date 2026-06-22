@@ -1,31 +1,30 @@
 import User from '../models/User.js';
-import ApiError from '../utils/ApiError.js';
-import catchAsync from '../utils/catchAsync.js';
 
-export const getProfile = catchAsync(async (req, res) => {
-  res.status(200).json({
-    success: true,
-    data: { user: req.userDoc.toPublicJSON() },
-  });
-});
-
-export const updateProfile = catchAsync(async (req, res) => {
-  const { name, photo, phone } = req.body;
-  const user = req.userDoc;
-
-  if (name !== undefined) user.name = name.trim();
-  if (photo !== undefined) user.photo = photo.trim();
-  if (phone !== undefined) user.phone = phone.trim();
-
-  if (!user.name) {
-    throw new ApiError(400, 'Name cannot be empty');
+// GET /users/profile
+export const getProfile = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.userId);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    res.status(200).json({ success: true, data: { user: user.toPublicJSON() } });
+  } catch (error) {
+    next(error);
   }
+};
 
-  await user.save();
+// PATCH /users/profile
+export const updateProfile = async (req, res, next) => {
+  try {
+    const { name, photo, phone } = req.body;
+    const user = await User.findById(req.user.userId);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
 
-  res.status(200).json({
-    success: true,
-    message: 'Profile updated successfully',
-    data: { user: user.toPublicJSON() },
-  });
-});
+    if (name) user.name = name.trim();
+    if (photo !== undefined) user.photo = photo;
+    if (phone !== undefined) user.phone = phone;
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Profile updated', data: { user: user.toPublicJSON() } });
+  } catch (error) {
+    next(error);
+  }
+};
