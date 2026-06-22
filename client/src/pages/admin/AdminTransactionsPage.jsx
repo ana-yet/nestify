@@ -1,19 +1,20 @@
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { format } from 'date-fns';
-import { fetchAdminTransactions } from '../../api/admin.api.js';
-import LoadingSpinner from '../../components/shared/LoadingSpinner.jsx';
-import EmptyState from '../../components/shared/EmptyState.jsx';
-import Pagination from '../../components/shared/Pagination.jsx';
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { fetchAdminTransactions } from "../../api/admin.api.js";
+import LoadingSpinner from "../../components/shared/LoadingSpinner.jsx";
+import EmptyState from "../../components/shared/EmptyState.jsx";
+import Pagination from "../../components/shared/Pagination.jsx";
 
 const AdminTransactionsPage = () => {
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [searchInput, setSearchInput] = useState('');
+  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ['admin', 'transactions', page, search],
-    queryFn: () => fetchAdminTransactions({ page, limit: 12, search: search || undefined }),
+    queryKey: ["admin", "transactions", page, search],
+    queryFn: () =>
+      fetchAdminTransactions({ page, limit: 12, search: search || undefined }),
   });
 
   const transactions = data?.transactions || [];
@@ -30,7 +31,9 @@ const AdminTransactionsPage = () => {
       <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-text-main">Transactions</h1>
-          <p className="text-text-muted mt-1">Full payment ledger across the platform</p>
+          <p className="text-text-muted mt-1">
+            Full payment ledger across the platform
+          </p>
         </div>
         <form onSubmit={handleSearch} className="flex gap-2 w-full sm:w-auto">
           <input
@@ -48,8 +51,8 @@ const AdminTransactionsPage = () => {
               type="button"
               className="btn btn-ghost btn-sm"
               onClick={() => {
-                setSearch('');
-                setSearchInput('');
+                setSearch("");
+                setSearchInput("");
                 setPage(1);
               }}
             >
@@ -65,13 +68,17 @@ const AdminTransactionsPage = () => {
         <EmptyState
           icon="error_outline"
           title="Failed to load transactions"
-          description={error?.message || 'Something went wrong'}
-          action={<button className="btn btn-primary-nestify" onClick={refetch}>Retry</button>}
+          description={error?.message || "Something went wrong"}
+          action={
+            <button className="btn btn-primary-nestify" onClick={refetch}>
+              Retry
+            </button>
+          }
         />
       ) : transactions.length === 0 ? (
         <EmptyState
           icon="payments"
-          title={search ? 'No matching transactions' : 'No transactions yet'}
+          title={search ? "No matching transactions" : "No transactions yet"}
         />
       ) : (
         <>
@@ -89,18 +96,29 @@ const AdminTransactionsPage = () => {
               </thead>
               <tbody>
                 {transactions.map((txn) => (
-                  <tr key={txn._id} className="hover:bg-surface-container-low/40">
-                    <td className="font-mono text-xs max-w-[100px] truncate" title={txn._id}>
+                  <tr
+                    key={txn._id}
+                    className="hover:bg-surface-container-low/40"
+                  >
+                    <td
+                      className="font-mono text-xs max-w-[100px] truncate"
+                      title={txn._id}
+                    >
                       {txn._id}
                     </td>
                     <td className="font-medium text-sm max-w-[160px] truncate">
-                      {txn.propertyId?.title || '—'}
+                      {txn.propertyId?.title || "—"}
                     </td>
-                    <td className="text-sm">{txn.tenantId?.name || '—'}</td>
-                    <td className="text-sm">{txn.ownerId?.name || '—'}</td>
-                    <td className="font-medium">${txn.amount?.toLocaleString()}</td>
+                    <td className="text-sm">{txn.tenantId?.name || "—"}</td>
+                    <td className="text-sm">{txn.ownerId?.name || "—"}</td>
+                    <td className="font-medium">
+                      ${txn.amount?.toLocaleString()}
+                    </td>
                     <td className="text-sm text-text-muted whitespace-nowrap">
-                      {format(new Date(txn.paidAt || txn.createdAt), 'MMM d, yyyy')}
+                      {format(
+                        new Date(txn.paidAt || txn.createdAt),
+                        "MMM d, yyyy",
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -108,7 +126,11 @@ const AdminTransactionsPage = () => {
             </table>
           </div>
 
-          <Pagination page={pagination.page} totalPages={pagination.totalPages} onPageChange={setPage} />
+          <Pagination
+            page={pagination.page}
+            totalPages={pagination.totalPages}
+            onPageChange={setPage}
+          />
         </>
       )}
     </div>

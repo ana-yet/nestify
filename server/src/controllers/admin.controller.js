@@ -1,7 +1,7 @@
-import User from '../models/User.js';
-import Booking from '../models/Booking.js';
-import Transaction from '../models/Transaction.js';
-import Property from '../models/Property.js';
+import User from "../models/User.js";
+import Booking from "../models/Booking.js";
+import Transaction from "../models/Transaction.js";
+import Property from "../models/Property.js";
 
 const parsePage = (query) => {
   const page = Math.max(1, parseInt(query.page, 10) || 1);
@@ -32,22 +32,31 @@ export const getAllUsers = async (req, res, next) => {
 export const updateUserRole = async (req, res, next) => {
   try {
     const { role } = req.body;
-    if (!['tenant', 'owner', 'admin'].includes(role)) {
-      return res.status(400).json({ success: false, message: 'Invalid role' });
+    if (!["tenant", "owner", "admin"].includes(role)) {
+      return res.status(400).json({ success: false, message: "Invalid role" });
     }
 
     const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
 
     // Prevent self-demotion
-    if (user._id.toString() === req.user.userId && role !== 'admin') {
-      return res.status(400).json({ success: false, message: 'Cannot change your own admin role' });
+    if (user._id.toString() === req.user.userId && role !== "admin") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Cannot change your own admin role" });
     }
 
     user.role = role;
     await user.save();
 
-    res.status(200).json({ success: true, message: 'Role updated', data: { user: user.toPublicJSON() } });
+    res.status(200).json({
+      success: true,
+      message: "Role updated",
+      data: { user: user.toPublicJSON() },
+    });
   } catch (error) {
     next(error);
   }
@@ -62,9 +71,9 @@ export const getAllBookings = async (req, res, next) => {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
-        .populate('propertyId', 'title location')
-        .populate('tenantId', 'name email')
-        .populate('ownerId', 'name email'),
+        .populate("propertyId", "title location")
+        .populate("tenantId", "name email")
+        .populate("ownerId", "name email"),
       Booking.countDocuments(),
     ]);
 
@@ -89,22 +98,22 @@ export const getAllTransactions = async (req, res, next) => {
       const search = req.query.search.trim();
       // Try to find matching users
       const matchingUsers = await User.find({
-        name: { $regex: search, $options: 'i' },
-      }).select('_id');
+        name: { $regex: search, $options: "i" },
+      }).select("_id");
       const userIds = matchingUsers.map((u) => u._id);
 
       // Try to find matching properties
       const matchingProps = await Property.find({
-        title: { $regex: search, $options: 'i' },
-      }).select('_id');
+        title: { $regex: search, $options: "i" },
+      }).select("_id");
       const propIds = matchingProps.map((p) => p._id);
 
       filter.$or = [
         { propertyId: { $in: propIds } },
         { tenantId: { $in: userIds } },
         { ownerId: { $in: userIds } },
-        { stripePaymentIntentId: { $regex: search, $options: 'i' } },
-        { stripeSessionId: { $regex: search, $options: 'i' } },
+        { stripePaymentIntentId: { $regex: search, $options: "i" } },
+        { stripeSessionId: { $regex: search, $options: "i" } },
       ];
     }
 
@@ -113,9 +122,9 @@ export const getAllTransactions = async (req, res, next) => {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
-        .populate('propertyId', 'title')
-        .populate('tenantId', 'name email')
-        .populate('ownerId', 'name email'),
+        .populate("propertyId", "title")
+        .populate("tenantId", "name email")
+        .populate("ownerId", "name email"),
       Transaction.countDocuments(filter),
     ]);
 

@@ -1,6 +1,6 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import useAuth from '../hooks/useAuth.js';
-import LoadingSpinner from '../components/shared/LoadingSpinner.jsx';
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import useAuth from "../hooks/useAuth.js";
+import LoadingSpinner from "../components/shared/LoadingSpinner.jsx";
 
 const PrivateRoute = () => {
   const { isAuthenticated, loading } = useAuth();

@@ -1,9 +1,22 @@
-import mongoose from 'mongoose';
-import Transaction from '../models/Transaction.js';
-import Property from '../models/Property.js';
-import Booking from '../models/Booking.js';
+import mongoose from "mongoose";
+import Transaction from "../models/Transaction.js";
+import Property from "../models/Property.js";
+import Booking from "../models/Booking.js";
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 // GET /analytics/owner/summary
 export const ownerSummary = async (req, res, next) => {
@@ -12,11 +25,15 @@ export const ownerSummary = async (req, res, next) => {
 
     const [earningsResult, totalProperties, totalBookings] = await Promise.all([
       Transaction.aggregate([
-        { $match: { ownerId, status: 'succeeded' } },
-        { $group: { _id: null, total: { $sum: '$amount' } } },
+        { $match: { ownerId, status: "succeeded" } },
+        { $group: { _id: null, total: { $sum: "$amount" } } },
       ]),
       Property.countDocuments({ ownerId }),
-      Booking.countDocuments({ ownerId, bookingStatus: 'approved', paymentStatus: 'paid' }),
+      Booking.countDocuments({
+        ownerId,
+        bookingStatus: "approved",
+        paymentStatus: "paid",
+      }),
     ]);
 
     res.status(200).json({
@@ -42,13 +59,22 @@ export const ownerMonthlyEarnings = async (req, res, next) => {
     const monthKeys = [];
     for (let i = 11; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      monthKeys.push({ year: d.getFullYear(), month: d.getMonth() + 1, label: MONTHS[d.getMonth()] });
+      monthKeys.push({
+        year: d.getFullYear(),
+        month: d.getMonth() + 1,
+        label: MONTHS[d.getMonth()],
+      });
     }
     const startDate = new Date(monthKeys[0].year, monthKeys[0].month - 1, 1);
 
     const aggregated = await Transaction.aggregate([
-      { $match: { ownerId, status: 'succeeded', paidAt: { $gte: startDate } } },
-      { $group: { _id: { year: { $year: '$paidAt' }, month: { $month: '$paidAt' } }, earnings: { $sum: '$amount' } } },
+      { $match: { ownerId, status: "succeeded", paidAt: { $gte: startDate } } },
+      {
+        $group: {
+          _id: { year: { $year: "$paidAt" }, month: { $month: "$paidAt" } },
+          earnings: { $sum: "$amount" },
+        },
+      },
     ]);
 
     const earningsMap = {};

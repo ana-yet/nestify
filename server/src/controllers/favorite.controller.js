@@ -1,13 +1,14 @@
-import Favorite from '../models/Favorite.js';
+import Favorite from "../models/Favorite.js";
 
 export const getFavorites = async (req, res, next) => {
   try {
     const favorites = await Favorite.find({ userId: req.user.userId })
       .sort({ createdAt: -1 })
       .populate({
-        path: 'propertyId',
-        match: { status: 'approved' },
-        select: 'title location images rent rentType propertyType bedrooms bathrooms averageRating',
+        path: "propertyId",
+        match: { status: "approved" },
+        select:
+          "title location images rent rentType propertyType bedrooms bathrooms averageRating",
       });
 
     // Filter out null populated results (unapproved properties)
@@ -23,13 +24,25 @@ export const addFavorite = async (req, res, next) => {
   try {
     const { propertyId } = req.body;
 
-    const existing = await Favorite.findOne({ userId: req.user.userId, propertyId });
+    const existing = await Favorite.findOne({
+      userId: req.user.userId,
+      propertyId,
+    });
     if (existing) {
-      return res.status(409).json({ success: false, message: 'Already in favorites' });
+      return res
+        .status(409)
+        .json({ success: false, message: "Already in favorites" });
     }
 
-    const favorite = await Favorite.create({ userId: req.user.userId, propertyId });
-    res.status(201).json({ success: true, message: 'Added to favorites', data: { favorite } });
+    const favorite = await Favorite.create({
+      userId: req.user.userId,
+      propertyId,
+    });
+    res.status(201).json({
+      success: true,
+      message: "Added to favorites",
+      data: { favorite },
+    });
   } catch (error) {
     next(error);
   }
@@ -42,7 +55,7 @@ export const removeFavorite = async (req, res, next) => {
       propertyId: req.params.propertyId,
     });
 
-    res.status(200).json({ success: true, message: 'Removed from favorites' });
+    res.status(200).json({ success: true, message: "Removed from favorites" });
   } catch (error) {
     next(error);
   }
