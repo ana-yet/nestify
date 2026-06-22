@@ -1,10 +1,15 @@
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
-import { updateProperty } from '../../api/properties.api.js';
-import { AMENITY_OPTIONS, PROPERTY_TYPES, RENT_TYPES } from '../../utils/propertyHelpers.js';
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { updateProperty } from "../../api/properties.api.js";
+import {
+  AMENITY_OPTIONS,
+  PROPERTY_TYPES,
+  RENT_TYPES,
+} from "../../utils/propertyHelpers.js";
+import ImageUploader from "../shared/ImageUploader.jsx";
 
 const PropertyEditForm = ({
   propertyId,
@@ -16,7 +21,7 @@ const PropertyEditForm = ({
   onSuccessNavigate,
 }) => {
   const queryClient = useQueryClient();
-  const { register, handleSubmit, reset, watch } = useForm();
+  const { register, handleSubmit, reset, watch, setValue } = useForm();
 
   useEffect(() => {
     if (property) {
@@ -31,13 +36,14 @@ const PropertyEditForm = ({
         bathrooms: property.bathrooms,
         propertySize: property.propertySize,
         amenities: property.amenities || [],
-        extraFeatures: (property.extraFeatures || []).join('\n'),
-        imageUrls: (property.images || []).join('\n'),
+        extraFeatures: (property.extraFeatures || []).join("\n"),
+        images: property.images || [],
       });
     }
   }, [property, reset]);
 
-  const amenities = watch('amenities') || [];
+  const amenities = watch("amenities") || [];
+  const images = watch("images") || [];
 
   const mutation = useMutation({
     mutationFn: (payload) => updateProperty(propertyId, payload),
@@ -45,22 +51,20 @@ const PropertyEditForm = ({
       invalidateKeys.forEach((key) => {
         queryClient.invalidateQueries({ queryKey: key });
       });
-      queryClient.invalidateQueries({ queryKey: ['properties', propertyId] });
+      queryClient.invalidateQueries({ queryKey: ["properties", propertyId] });
       toast.success(successMessage);
       onSuccessNavigate();
     },
-    onError: (err) => toast.error(err.response?.data?.message || 'Update failed'),
+    onError: (err) =>
+      toast.error(err.response?.data?.message || "Update failed"),
   });
 
   const onSubmit = (values) => {
-    const images = values.imageUrls
-      .split('\n')
-      .map((u) => u.trim())
-      .filter(Boolean);
+    const imgList = (values.images || []).filter(Boolean);
 
     const extraFeatures = values.extraFeatures
       ? values.extraFeatures
-          .split('\n')
+          .split("\n")
           .map((f) => f.trim())
           .filter(Boolean)
       : [];
@@ -77,13 +81,16 @@ const PropertyEditForm = ({
       propertySize: Number(values.propertySize) || 0,
       amenities: values.amenities || [],
       extraFeatures,
-      images,
+      images: imgList,
     });
   };
 
   return (
     <div className="max-w-3xl mx-auto">
-      <Link to={backTo} className="text-sm text-primary hover:underline mb-4 inline-flex items-center gap-1">
+      <Link
+        to={backTo}
+        className="text-sm text-primary hover:underline mb-4 inline-flex items-center gap-1"
+      >
         <span className="material-symbols-outlined text-base">arrow_back</span>
         {backLabel}
       </Link>
@@ -95,20 +102,26 @@ const PropertyEditForm = ({
       >
         <div>
           <label className="form-label-nestify">Title</label>
-          <input className="form-input-nestify" {...register('title', { required: true })} />
+          <input
+            className="form-input-nestify"
+            {...register("title", { required: true })}
+          />
         </div>
         <div>
           <label className="form-label-nestify">Description</label>
           <textarea
             rows={4}
             className="textarea textarea-bordered w-full"
-            {...register('description', { required: true })}
+            {...register("description", { required: true })}
           />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="form-label-nestify">Type</label>
-            <select className="select select-bordered w-full" {...register('propertyType')}>
+            <select
+              className="select select-bordered w-full"
+              {...register("propertyType")}
+            >
               {PROPERTY_TYPES.map((t) => (
                 <option key={t.value} value={t.value}>
                   {t.label}
@@ -118,12 +131,19 @@ const PropertyEditForm = ({
           </div>
           <div>
             <label className="form-label-nestify">Rent</label>
-            <input type="number" className="form-input-nestify" {...register('rent')} />
+            <input
+              type="number"
+              className="form-input-nestify"
+              {...register("rent")}
+            />
           </div>
         </div>
         <div>
           <label className="form-label-nestify">Rent Type</label>
-          <select className="select select-bordered w-full" {...register('rentType')}>
+          <select
+            className="select select-bordered w-full"
+            {...register("rentType")}
+          >
             {RENT_TYPES.map((t) => (
               <option key={t.value} value={t.value}>
                 {t.label}
@@ -133,25 +153,52 @@ const PropertyEditForm = ({
         </div>
         <div>
           <label className="form-label-nestify">City</label>
-          <input className="form-input-nestify" {...register('location.city', { required: true })} />
+          <input
+            className="form-input-nestify"
+            {...register("location.city", { required: true })}
+          />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <input className="form-input-nestify" placeholder="State" {...register('location.state')} />
-          <input className="form-input-nestify" placeholder="Address" {...register('location.address')} />
-          <input className="form-input-nestify" placeholder="Zip" {...register('location.zip')} />
+          <input
+            className="form-input-nestify"
+            placeholder="State"
+            {...register("location.state")}
+          />
+          <input
+            className="form-input-nestify"
+            placeholder="Address"
+            {...register("location.address")}
+          />
+          <input
+            className="form-input-nestify"
+            placeholder="Zip"
+            {...register("location.zip")}
+          />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className="form-label-nestify">Bedrooms</label>
-            <input type="number" className="form-input-nestify" {...register('bedrooms')} />
+            <input
+              type="number"
+              className="form-input-nestify"
+              {...register("bedrooms")}
+            />
           </div>
           <div>
             <label className="form-label-nestify">Bathrooms</label>
-            <input type="number" className="form-input-nestify" {...register('bathrooms')} />
+            <input
+              type="number"
+              className="form-input-nestify"
+              {...register("bathrooms")}
+            />
           </div>
           <div>
             <label className="form-label-nestify">Size (sq ft)</label>
-            <input type="number" className="form-input-nestify" {...register('propertySize')} />
+            <input
+              type="number"
+              className="form-input-nestify"
+              {...register("propertySize")}
+            />
           </div>
         </div>
         <div>
@@ -161,34 +208,54 @@ const PropertyEditForm = ({
               <label
                 key={amenity}
                 className={`px-3 py-1 rounded-full border text-sm cursor-pointer ${
-                  amenities.includes(amenity) ? 'bg-primary/10 border-primary' : ''
+                  amenities.includes(amenity)
+                    ? "bg-primary/10 border-primary"
+                    : ""
                 }`}
               >
-                <input type="checkbox" value={amenity} className="hidden" {...register('amenities')} />
+                <input
+                  type="checkbox"
+                  value={amenity}
+                  className="hidden"
+                  {...register("amenities")}
+                />
                 {amenity}
               </label>
             ))}
           </div>
         </div>
         <div>
-          <label className="form-label-nestify">Extra Features (one per line)</label>
+          <label className="form-label-nestify">
+            Extra Features (one per line)
+          </label>
           <textarea
             rows={3}
             className="textarea textarea-bordered w-full"
             placeholder="Private garden&#10;Smart home system"
-            {...register('extraFeatures')}
+            {...register("extraFeatures")}
           />
         </div>
         <div>
-          <label className="form-label-nestify">Image URLs</label>
-          <textarea
-            rows={4}
-            className="textarea textarea-bordered w-full font-mono text-sm"
-            {...register('imageUrls')}
+          <label className="form-label-nestify">Property Images</label>
+          <ImageUploader
+            images={images}
+            onChange={(imgs) => setValue("images", imgs)}
+            maxImages={5}
           />
+          <p className="text-xs text-text-muted mt-2">
+            First image will be the cover photo.
+          </p>
         </div>
-        <button type="submit" className="btn btn-primary-nestify w-full" disabled={mutation.isPending}>
-          {mutation.isPending ? <span className="loading loading-spinner loading-sm" /> : 'Save Changes'}
+        <button
+          type="submit"
+          className="btn btn-primary-nestify w-full"
+          disabled={mutation.isPending}
+        >
+          {mutation.isPending ? (
+            <span className="loading loading-spinner loading-sm" />
+          ) : (
+            "Save Changes"
+          )}
         </button>
       </form>
     </div>
