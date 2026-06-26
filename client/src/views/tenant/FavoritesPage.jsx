@@ -88,58 +88,60 @@ const FavoritesPage = () => {
               </tr>
             </thead>
             <tbody>
-              {favorites.map((item) => {
-                const property = item.property;
-                const { amount, suffix } = formatRent(
-                  property.rent,
-                  property.rentType,
-                );
-                return (
-                  <tr
-                    key={item._id}
-                    className="hover:bg-surface-container-low/40"
-                  >
-                    <td>
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={getPropertyImage(property)}
-                          alt={property.title}
-                          className="w-12 h-12 rounded-lg object-cover"
-                        />
-                        <span className="font-medium">{property.title}</span>
-                      </div>
-                    </td>
-                    <td className="text-sm text-text-muted">
-                      {formatLocation(property.location)}
-                    </td>
-                    <td>
-                      ${amount}
-                      {suffix}
-                    </td>
-                    <td className="text-sm text-text-muted">
-                      {new Date(item.createdAt).toLocaleDateString()}
-                    </td>
-                    <td>
-                      <div className="flex gap-2">
-                        <Link
-                          href={`/properties/${property._id}`}
-                          className="btn btn-outline btn-xs"
-                        >
-                          View
-                        </Link>
-                        <button
-                          type="button"
-                          className="btn btn-error btn-outline btn-xs"
-                          disabled={removeMutation.isPending}
-                          onClick={() => removeMutation.mutate(property._id)}
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
+              {favorites
+                .filter((item) => item.propertyId)
+                .map((item) => {
+                  const property = item.propertyId;
+                  const { amount, suffix } = formatRent(
+                    property.rent,
+                    property.rentType,
+                  );
+                  return (
+                    <tr
+                      key={item._id}
+                      className="hover:bg-surface-container-low/40"
+                    >
+                      <td>
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={getPropertyImage(property)}
+                            alt={property.title}
+                            className="w-12 h-12 rounded-lg object-cover"
+                          />
+                          <span className="font-medium">{property.title}</span>
+                        </div>
+                      </td>
+                      <td className="text-sm text-text-muted">
+                        {formatLocation(property.location)}
+                      </td>
+                      <td>
+                        ${amount}
+                        {suffix}
+                      </td>
+                      <td className="text-sm text-text-muted">
+                        {new Date(item.createdAt).toLocaleDateString()}
+                      </td>
+                      <td>
+                        <div className="flex gap-2">
+                          <Link
+                            href={`/properties/${property._id}`}
+                            className="btn btn-outline btn-xs"
+                          >
+                            View
+                          </Link>
+                          <button
+                            type="button"
+                            className="btn btn-error btn-outline btn-xs"
+                            disabled={removeMutation.isPending}
+                            onClick={() => removeMutation.mutate(property._id)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </div>
