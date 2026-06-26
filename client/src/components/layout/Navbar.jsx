@@ -4,7 +4,7 @@ import useAuth from "../../hooks/useAuth.js";
 import { getDashboardPath } from "../../utils/formatters.js";
 
 const Navbar = () => {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, loading, logout } = useAuth();
   const pathname = usePathname();
 
   const getLinkClass = (path, end = false) => {
@@ -37,7 +37,9 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          {isAuthenticated ? (
+          {loading ? (
+            <span className="loading loading-spinner loading-sm text-primary" />
+          ) : isAuthenticated ? (
             <>
               <Link
                 href={getDashboardPath(user.role)}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -34,10 +34,13 @@ const LoginPage = () => {
     return <LoadingSpinner fullScreen message="Loading..." />;
   }
 
-  if (isAuthenticated) {
-    if (typeof window !== "undefined") {
+  useEffect(() => {
+    if (isAuthenticated && !authLoading) {
       router.replace(getDashboardPath(user.role));
     }
+  }, [isAuthenticated, authLoading, user, router]);
+
+  if (isAuthenticated) {
     return <LoadingSpinner fullScreen message="Redirecting..." />;
   }
 
