@@ -16,7 +16,7 @@ const TenantHomePage = () => {
         ].map((card) => (
           <Link
             key={card.to}
-            to={card.to}
+            href={card.to}
             className="bg-surface rounded-xl border border-border-subtle p-6 hover:shadow-lg transition-shadow"
           >
             <span className="material-symbols-outlined text-primary text-3xl mb-3">{card.icon}</span>
