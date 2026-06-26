@@ -1,13 +1,13 @@
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { createBooking } from '../../api/bookings.api.js';
 import useAuth from '../../hooks/useAuth.js';
 
 const BookingModal = ({ property, isOpen, onClose }) => {
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const {
     register,
@@ -28,7 +28,7 @@ const BookingModal = ({ property, isOpen, onClose }) => {
     onSuccess: (booking) => {
       toast.success('Booking created! Proceed to payment.');
       onClose();
-      navigate(`/payment/${booking._id}`);
+      router.push(`/payment/${booking._id}`);
     },
     onError: (err) => {
       toast.error(err.response?.data?.message || 'Failed to create booking');

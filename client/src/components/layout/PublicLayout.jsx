@@ -1,14 +1,11 @@
-import { Outlet } from 'react-router-dom';
-import Navbar from './Navbar.jsx';
-import Footer from './Footer.jsx';
+import Navbar from "./Navbar.jsx";
+import Footer from "./Footer.jsx";
 
-const PublicLayout = () => {
+const PublicLayout = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
-      <main className="flex-grow">
-        <Outlet />
-      </main>
+      <main className="flex-grow">{children}</main>
       <Footer />
     </div>
   );

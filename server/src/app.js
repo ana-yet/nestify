@@ -1,5 +1,4 @@
 import express from 'express';
-import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import compression from 'compression';
@@ -15,16 +14,33 @@ initFirebaseAdmin();
 
 app.set('trust proxy', 1);
 
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(compression());
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
-    credentials: true,
-  })
-);
+const allowedOrigins = new Set([
+  process.env.CLIENT_URL,
+  'https://nestify-client-zeta.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:5173',
+]);
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  res.setHeader('Cache-Control', 'no-store');
+  if (origin && allowedOrigins.has(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With');
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Access-Control-Max-Age', '0');
+  }
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
 
 app.post(
   '/api/payments/webhook',

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import useAuth from '../../hooks/useAuth.js';
 import { formatRent, formatLocation, getPropertyImage } from '../../utils/propertyHelpers.js';
@@ -88,8 +88,7 @@ const PropertyCard = ({ property, index = 0, showStatus = false }) => {
             <span className="text-xs text-text-muted">{suffix}</span>
           </div>
           <Link
-            to={linkTo}
-            state={linkState}
+            href={linkTo}
             className="px-4 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-lg text-sm font-medium transition-colors border border-primary/20 hover:border-transparent"
           >
             Details

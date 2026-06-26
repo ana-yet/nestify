@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -40,7 +40,7 @@ class ErrorBoundary extends Component {
               >
                 Refresh Page
               </button>
-              <Link to="/" className="btn btn-outline" onClick={this.handleReset}>
+              <Link href="/" className="btn btn-outline" onClick={this.handleReset}>
                 Back to Home
               </Link>
             </div>

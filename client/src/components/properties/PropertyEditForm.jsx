@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -88,7 +88,7 @@ const PropertyEditForm = ({
   return (
     <div className="max-w-3xl mx-auto">
       <Link
-        to={backTo}
+        href={backTo}
         className="text-sm text-primary hover:underline mb-4 inline-flex items-center gap-1"
       >
         <span className="material-symbols-outlined text-base">arrow_back</span>

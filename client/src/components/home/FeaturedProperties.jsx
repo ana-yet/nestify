@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { fetchFeaturedProperties } from '../../api/properties.api.js';
@@ -41,7 +41,7 @@ const FeaturedProperties = () => {
             <p className="text-center text-text-muted py-12">No featured properties yet.</p>
           )}
           <div className="text-center mt-10">
-            <Link to="/properties" className="btn btn-outline-nestify">
+            <Link href="/properties" className="btn btn-outline-nestify">
               View All Properties
             </Link>
           </div>

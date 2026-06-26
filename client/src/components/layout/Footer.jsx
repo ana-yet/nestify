@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 const Footer = () => {
   return (
@@ -9,26 +9,26 @@ const Footer = () => {
           <p className="text-sm text-text-muted">© 2024 Nestify. Elevated Living Experiences.</p>
         </div>
         <div className="flex flex-col gap-2">
-          <Link to="/" className="text-sm text-text-muted hover:text-primary">
+          <Link href="/" className="text-sm text-text-muted hover:text-primary">
             About Us
           </Link>
-          <Link to="/" className="text-sm text-text-muted hover:text-primary">
+          <Link href="/" className="text-sm text-text-muted hover:text-primary">
             Careers
           </Link>
         </div>
         <div className="flex flex-col gap-2">
-          <Link to="/" className="text-sm text-text-muted hover:text-primary">
+          <Link href="/" className="text-sm text-text-muted hover:text-primary">
             Terms of Service
           </Link>
-          <Link to="/" className="text-sm text-text-muted hover:text-primary">
+          <Link href="/" className="text-sm text-text-muted hover:text-primary">
             Privacy Policy
           </Link>
         </div>
         <div className="flex flex-col gap-2">
-          <Link to="/" className="text-sm text-text-muted hover:text-primary">
+          <Link href="/" className="text-sm text-text-muted hover:text-primary">
             Contact Support
           </Link>
-          <Link to="/" className="text-sm text-text-muted hover:text-primary">
+          <Link href="/" className="text-sm text-text-muted hover:text-primary">
             Newsletter
           </Link>
         </div>

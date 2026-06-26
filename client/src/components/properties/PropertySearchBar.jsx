@@ -1,8 +1,8 @@
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 const PropertySearchBar = ({ className = '', compact = false }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [location, setLocation] = useState('');
   const [propertyType, setPropertyType] = useState('');
   const [minPrice, setMinPrice] = useState('');
@@ -15,7 +15,7 @@ const PropertySearchBar = ({ className = '', compact = false }) => {
     if (propertyType) params.set('propertyType', propertyType);
     if (minPrice) params.set('minPrice', minPrice);
     if (maxPrice) params.set('maxPrice', maxPrice);
-    navigate(`/properties?${params.toString()}`);
+    router.push(`/properties?${params.toString()}`);
   };
 
   if (compact) {

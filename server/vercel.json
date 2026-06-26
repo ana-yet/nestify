@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "rewrites": [{ "source": "/(.*)", "destination": "/api" }],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" },
+        { "key": "CDN-Cache-Control", "value": "no-store" }
+      ]
+    }
+  ]
+}

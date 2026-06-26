@@ -1,9 +1,8 @@
-import { Outlet } from 'react-router-dom';
-import Sidebar from './Sidebar.jsx';
-import MobileDashboardNav from './MobileDashboardNav.jsx';
-import useAuth from '../../hooks/useAuth.js';
+import Sidebar from "./Sidebar.jsx";
+import MobileDashboardNav from "./MobileDashboardNav.jsx";
+import useAuth from "../../hooks/useAuth.js";
 
-const DashboardLayout = ({ role }) => {
+const DashboardLayout = ({ role, children }) => {
   const { user } = useAuth();
 
   return (
@@ -19,10 +18,16 @@ const DashboardLayout = ({ role }) => {
           </div>
           <div className="flex items-center gap-3 ml-auto">
             {user?.photo ? (
-              <img src={user.photo} alt={user.name} className="w-9 h-9 rounded-full object-cover" />
+              <img
+                src={user.photo}
+                alt={user.name}
+                className="w-9 h-9 rounded-full object-cover"
+              />
             ) : (
               <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-                <span className="material-symbols-outlined text-primary">person</span>
+                <span className="material-symbols-outlined text-primary">
+                  person
+                </span>
               </div>
             )}
             <div className="hidden sm:block text-right">
@@ -32,7 +37,7 @@ const DashboardLayout = ({ role }) => {
           </div>
         </header>
         <main className="flex-1 p-4 md:p-8 max-w-container-max mx-auto w-full">
-          <Outlet />
+          {children}
         </main>
       </div>
     </div>

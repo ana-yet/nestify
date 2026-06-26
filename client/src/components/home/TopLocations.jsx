@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { fetchTopLocations } from '../../api/properties.api.js';
@@ -35,7 +35,7 @@ const TopLocations = () => {
               transition={{ delay: index * 0.08 }}
             >
               <Link
-                to={`/properties?location=${encodeURIComponent(loc.city)}`}
+                href={`/properties?location=${encodeURIComponent(loc.city)}`}
                 className="group block relative h-48 rounded-xl overflow-hidden border border-border-subtle"
               >
                 <img

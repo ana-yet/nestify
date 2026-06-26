@@ -5,3 +5,5 @@ node_modules/
 .DS_Store
 *.log
 *-firebase-adminsdk-*.json
+.vercel
+.env*.local

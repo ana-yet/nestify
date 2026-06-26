@@ -1,4 +1,4 @@
-const IMGBB_API_KEY = import.meta.env.VITE_IMGBB_API_KEY;
+const IMGBB_API_KEY = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
 
 /**
  * Upload a single image file to imgbb.
